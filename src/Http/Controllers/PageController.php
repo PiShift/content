@@ -8,6 +8,8 @@ use PiShift\Content\ContentManager;
 
 /**
  * Serves pages created in the admin, on any path the application doesn't route itself.
+ *
+ * @internal Not part of the public API; may change in any release.
  */
 class PageController
 {

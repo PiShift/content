@@ -15,6 +15,8 @@ use PiShift\Content\Models\Media;
 
 /**
  * Media library: the page, plus JSON endpoints used by the image/file pickers.
+ *
+ * @internal Not part of the public API; may change in any release.
  */
 class MediaController
 {

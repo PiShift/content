@@ -8,6 +8,8 @@ use PiShift\Content\Admin\Navigation;
 
 /**
  * Inertia middleware of the admin only: the public site keeps its own Blade rendering.
+ *
+ * @internal Not part of the public API; may change in any release.
  */
 class HandleAdminRequests extends Middleware
 {

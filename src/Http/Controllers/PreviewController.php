@@ -9,6 +9,8 @@ use PiShift\Content\Models\Page;
 
 /**
  * Renders a page's draft (and draft globals) behind a signed URL, for the admin preview.
+ *
+ * @internal Not part of the public API; may change in any release.
  */
 class PreviewController
 {

@@ -20,6 +20,9 @@ use PiShift\Content\Fields\Text;
 use PiShift\Content\Fields\Upload;
 use PiShift\Content\Support\Localizer;
 
+/**
+ * @internal Not part of the public API; may change in any release.
+ */
 class CollectionController
 {
     public function __construct(protected CollectionRegistry $collections) {}

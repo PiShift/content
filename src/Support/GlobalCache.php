@@ -8,6 +8,8 @@ use PiShift\Content\ContentManager;
 /**
  * Published globals are read on every request (header, footer…), so their stored content is
  * cached until the global is saved.
+ *
+ * @internal Not part of the public API; may change in any release.
  */
 class GlobalCache
 {

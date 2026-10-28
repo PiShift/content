@@ -12,6 +12,8 @@ use PiShift\Content\Models\GlobalSet;
 
 /**
  * Editing of globals: site identity, contact, menus, theme… whatever the project defines.
+ *
+ * @internal Not part of the public API; may change in any release.
  */
 class GlobalController
 {

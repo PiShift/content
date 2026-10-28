@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The admin has its own interface language, independent of the public site's.
+ *
+ * @internal Not part of the public API; may change in any release.
  */
 class SetAdminLocale
 {

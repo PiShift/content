@@ -91,16 +91,20 @@ return [
     | Admin
     |--------------------------------------------------------------------------
     |
-    | The admin is a React + Inertia app. While the package lives inside a
-    | project, the project's Vite builds it from the "vite" entries.
+    | The admin is a React + Inertia app. "assets" picks how it is loaded:
+    | - "prebuilt": the package's own build, published with
+    |   `php artisan vendor:publish --tag=content-assets` (no React in the project);
+    | - "vite": the project's Vite builds it from the "vite" entries (needed for
+    |   project admin pages, see README).
     |
     */
 
     'admin' => [
-        'path' => env('CONTENT_ADMIN_PATH', 'manage'),
+        'path' => env('CONTENT_ADMIN_PATH', 'admin'),
         'name' => env('CONTENT_ADMIN_NAME', env('APP_NAME', 'Admin')),
         'guard' => 'web',
         'locales' => ['ar', 'fr'],
+        'assets' => env('CONTENT_ADMIN_ASSETS', 'prebuilt'),
         'vite' => ['resources/admin/app.tsx'],
         'middleware' => ['web'],
     ],

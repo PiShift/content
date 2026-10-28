@@ -16,6 +16,9 @@ use PiShift\Content\Document\PageDocument;
 use PiShift\Content\Models\Page;
 use PiShift\Content\Models\Revision;
 
+/**
+ * @internal Not part of the public API; may change in any release.
+ */
 class PageController
 {
     public function __construct(protected ContentManager $content) {}

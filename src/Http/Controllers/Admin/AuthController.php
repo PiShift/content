@@ -12,6 +12,9 @@ use Inertia\Inertia;
 use Inertia\Response;
 use PiShift\Content\Http\Middleware\SetAdminLocale;
 
+/**
+ * @internal Not part of the public API; may change in any release.
+ */
 class AuthController
 {
     public function create(Request $request): Response|RedirectResponse

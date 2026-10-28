@@ -7,6 +7,9 @@ use Inertia\Inertia;
 use Inertia\Response;
 use PiShift\Content\Admin\Dashboard;
 
+/**
+ * @internal Not part of the public API; may change in any release.
+ */
 class DashboardController
 {
     public function __invoke(Request $request, Dashboard $dashboard): Response

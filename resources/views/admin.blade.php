@@ -8,8 +8,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    @viteReactRefresh
-    @vite(config('content.admin.vite'))
+    @if (config('content.admin.assets') === 'prebuilt')
+        {{-- The package's own build, published to public/vendor/content (never the dev server). --}}
+        {{ \Illuminate\Support\Facades\Vite::useBuildDirectory('vendor/content')->useHotFile(storage_path('framework/content-admin.hot'))->withEntryPoints(['resources/admin/standalone.tsx']) }}
+    @else
+        @viteReactRefresh
+        @vite(config('content.admin.vite'))
+    @endif
     <x-inertia::head>
         <title>{{ config('content.admin.name') }}</title>
     </x-inertia::head>

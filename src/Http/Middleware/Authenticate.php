@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Sends guests to the admin's own login page and requires the "content.manage" ability.
+ *
+ * @internal Not part of the public API; may change in any release.
  */
 class Authenticate
 {

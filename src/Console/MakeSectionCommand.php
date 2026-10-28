@@ -6,6 +6,9 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
+/**
+ * @internal Not part of the public API; may change in any release.
+ */
 class MakeSectionCommand extends Command
 {
     protected $signature = 'content:make-section {name : e.g. Cards or CardsSection} {--force : Overwrite existing files}';
