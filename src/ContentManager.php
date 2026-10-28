@@ -23,6 +23,9 @@ class ContentManager
     /** @var array<string, array<string, mixed>> */
     protected array $resolvedGlobals = [];
 
+    /** @var array<string, array<string, mixed>> */
+    protected array $globalData = [];
+
     public function __construct(
         protected SectionRegistry $sections,
         protected GlobalRegistry $globals,
@@ -171,6 +174,8 @@ class ContentManager
 
     public function forgetResolved(string $key): void
     {
+        unset($this->globalData["{$key}|draft"], $this->globalData["{$key}|published"]);
+
         foreach (array_keys($this->resolvedGlobals) as $cacheKey) {
             if (str_starts_with($cacheKey, "{$key}|")) {
                 unset($this->resolvedGlobals[$cacheKey]);
@@ -208,6 +213,12 @@ class ContentManager
             return [];
         }
 
+        $memoKey = $key.'|'.($this->previewing() ? 'draft' : 'published');
+
+        if (isset($this->globalData[$memoKey])) {
+            return $this->globalData[$memoKey];
+        }
+
         $stored = $this->previewing()
             ? GlobalSet::query()->where('key', $key)->value('draft')
             : Cache::rememberForever(GlobalCache::key($key), fn () => GlobalSet::query()->where('key', $key)->first()?->published);
@@ -222,6 +233,6 @@ class ContentManager
             $data = $type->upgrade($data, $savedVersion);
         }
 
-        return $type->fieldSet()->normalize($data);
+        return $this->globalData[$memoKey] = $type->fieldSet()->normalize($data);
     }
 }
