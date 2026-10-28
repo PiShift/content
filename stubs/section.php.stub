@@ -1,0 +1,22 @@
+<?php
+
+namespace {{ namespace }};
+
+use PiShift\Content\Fields\Field;
+use PiShift\Content\Sections\SectionType;
+
+class {{ class }} extends SectionType
+{
+    public function label(): string
+    {
+        return '{{ label }}';
+    }
+
+    public function fields(): array
+    {
+        return [
+            Field::text('title')->translatable()->required(),
+            Field::richText('body')->translatable(),
+        ];
+    }
+}

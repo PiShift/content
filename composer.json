@@ -1,0 +1,30 @@
+{
+    "name": "pishift/content",
+    "description": "Content engine for Laravel sites: structure in code, content in the database, rendering with the site's own components.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^12.0|^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PiShift\\Content\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PiShift\\Content\\ContentServiceProvider"
+            ],
+            "aliases": {
+                "Content": "PiShift\\Content\\Facades\\Content"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
