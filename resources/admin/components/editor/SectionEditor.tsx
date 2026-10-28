@@ -42,8 +42,9 @@ export function SectionEditor({
         );
     }
 
-    const variants = Object.entries(type.variants);
-    const styles = Object.entries(type.styles);
+    // A choice with a single option has nothing to choose.
+    const variants = Object.entries(type.variants).length > 1 ? Object.entries(type.variants) : [];
+    const styles = Object.entries(type.styles).filter(([, values]) => Object.keys(values).length > 1);
 
     return (
         <div className="flex flex-col gap-5">

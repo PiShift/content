@@ -129,4 +129,7 @@ return [
     'by' => 'by',
     'link' => 'Link',
     'save' => 'Save',
+    'template_full' => 'Full width',
+    'template_sidebar' => 'With sidebar',
+    'style_region' => 'Placement',
 ];

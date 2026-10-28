@@ -189,14 +189,26 @@ class ContentManager
             return [];
         }
 
-        $draft = $this->previewing();
-        $cacheKey = $key.'|'.app()->getLocale().'|'.($draft ? 'draft' : 'published');
+        $cacheKey = $key.'|'.app()->getLocale().'|'.($this->previewing() ? 'draft' : 'published');
 
-        if (isset($this->resolvedGlobals[$cacheKey])) {
-            return $this->resolvedGlobals[$cacheKey];
+        return $this->resolvedGlobals[$cacheKey] ??= $type->fieldSet()->resolve($this->globalData($key), $this->localizer());
+    }
+
+    /**
+     * Stored (unresolved) data of a global: published, or the draft during a preview.
+     * Translatable fields keep all their locales.
+     *
+     * @return array<string, mixed>
+     */
+    public function globalData(string $key): array
+    {
+        $type = $this->globals->get($key);
+
+        if (! $type) {
+            return [];
         }
 
-        $stored = $draft
+        $stored = $this->previewing()
             ? GlobalSet::query()->where('key', $key)->value('draft')
             : Cache::rememberForever(GlobalCache::key($key), fn () => GlobalSet::query()->where('key', $key)->first()?->published);
 
@@ -210,6 +222,6 @@ class ContentManager
             $data = $type->upgrade($data, $savedVersion);
         }
 
-        return $this->resolvedGlobals[$cacheKey] = $type->fieldSet()->resolve($type->fieldSet()->normalize($data), $this->localizer());
+        return $type->fieldSet()->normalize($data);
     }
 }

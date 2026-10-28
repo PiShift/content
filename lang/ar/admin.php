@@ -129,4 +129,7 @@ return [
     'by' => 'بواسطة',
     'link' => 'رابط',
     'save' => 'حفظ',
+    'template_full' => 'عرض كامل',
+    'template_sidebar' => 'مع شريط جانبي',
+    'style_region' => 'الموضع',
 ];

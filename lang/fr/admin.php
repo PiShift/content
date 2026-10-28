@@ -129,4 +129,7 @@ return [
     'by' => 'par',
     'link' => 'Lien',
     'save' => 'Enregistrer',
+    'template_full' => 'Pleine largeur',
+    'template_sidebar' => 'Avec barre latérale',
+    'style_region' => 'Emplacement',
 ];

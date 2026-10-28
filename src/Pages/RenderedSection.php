@@ -68,4 +68,29 @@ class RenderedSection
     {
         return View::make($this->type->view(), $this->viewData())->render();
     }
+
+    /**
+     * The section's HTML, wrapped with its preview markers in the admin preview. Templates
+     * that place sections themselves (regions, sidebars) output this.
+     */
+    public function html(): string
+    {
+        if (! $this->viewExists()) {
+            return config('app.debug') ? '<!-- content: missing view '.e($this->type->view()).' -->' : '';
+        }
+
+        if (! $this->page?->isPreview) {
+            return $this->render();
+        }
+
+        return '<div data-content-section="'.e($this->id).'" data-content-type="'.e($this->type->key()).'">'.$this->render().'</div>';
+    }
+
+    /**
+     * A style option's value, e.g. $section->style('region', 'main').
+     */
+    public function style(string $option, ?string $default = null): ?string
+    {
+        return $this->style[$option] ?? $default;
+    }
 }
