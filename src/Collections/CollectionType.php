@@ -125,6 +125,55 @@ abstract class CollectionType
         return [];
     }
 
+    public function canCreate(): bool
+    {
+        return true;
+    }
+
+    public function canDelete(object $record): bool
+    {
+        return true;
+    }
+
+    /**
+     * Buttons on a record's page.
+     *
+     * @return list<Action>
+     */
+    public function actions(): array
+    {
+        return [];
+    }
+
+    public function action(string $key): ?Action
+    {
+        return collect($this->actions())->first(fn (Action $action): bool => $action->key() === $key);
+    }
+
+    /**
+     * Columns shown as coloured badges: field name => [value => tone], tones being
+     * neutral, info, success, warning or danger.
+     *
+     * @return array<string, array<string, string>>
+     */
+    public function badges(): array
+    {
+        return [];
+    }
+
+    /**
+     * Count shown next to the menu entry (e.g. requests waiting for an answer).
+     */
+    public function navigationBadge(): ?int
+    {
+        return null;
+    }
+
+    /**
+     * Called after a record is saved from the admin (e.g. dispatch a job).
+     */
+    public function saved(object $record, bool $created): void {}
+
     public function fieldSet(): FieldSet
     {
         return $this->fieldSet ??= new FieldSet($this->fields());
@@ -145,6 +194,8 @@ abstract class CollectionType
             'columns' => $this->columns(),
             'filters' => $this->filters(),
             'searchable' => $this->searchable() !== [],
+            'badges' => (object) $this->badges(),
+            'canCreate' => $this->canCreate(),
         ];
     }
 }

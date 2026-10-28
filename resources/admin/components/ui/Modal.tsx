@@ -71,6 +71,7 @@ export function ConfirmModal({
     title,
     message,
     confirmLabel,
+    danger = true,
 }: {
     open: boolean;
     onClose: () => void;
@@ -78,6 +79,7 @@ export function ConfirmModal({
     title: ReactNode;
     message: ReactNode;
     confirmLabel: string;
+    danger?: boolean;
 }) {
     const t = useT();
 
@@ -91,7 +93,7 @@ export function ConfirmModal({
                 <>
                     <Button onClick={onClose}>{t('cancel')}</Button>
                     <Button
-                        variant="danger"
+                        variant={danger ? 'danger' : 'primary'}
                         onClick={() => {
                             onConfirm();
                             onClose();

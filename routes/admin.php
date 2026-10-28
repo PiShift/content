@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use PiShift\Content\Http\Controllers\Admin\AuthController;
 use PiShift\Content\Http\Controllers\Admin\CollectionController;
+use PiShift\Content\Http\Controllers\Admin\DashboardController;
 use PiShift\Content\Http\Controllers\Admin\GlobalController;
 use PiShift\Content\Http\Controllers\Admin\LocaleController;
 use PiShift\Content\Http\Controllers\Admin\MediaController;
@@ -21,7 +22,7 @@ Route::middleware([...config('content.admin.middleware', ['web']), SetAdminLocal
 
         Route::middleware(Authenticate::class)->group(function (): void {
             Route::post('logout', [AuthController::class, 'destroy'])->name('logout');
-            Route::redirect('/', config('content.admin.path', 'manage').'/pages')->name('home');
+            Route::get('/', DashboardController::class)->name('home');
 
             Route::get('pages', [PageController::class, 'index'])->name('pages.index');
             Route::post('pages', [PageController::class, 'store'])->name('pages.store');
@@ -45,6 +46,7 @@ Route::middleware([...config('content.admin.middleware', ['web']), SetAdminLocal
             Route::get('collections/{collection}/{record}', [CollectionController::class, 'edit'])->name('collections.edit');
             Route::put('collections/{collection}/{record}', [CollectionController::class, 'update'])->name('collections.update');
             Route::delete('collections/{collection}/{record}', [CollectionController::class, 'destroy'])->name('collections.destroy');
+            Route::post('collections/{collection}/{record}/actions/{action}', [CollectionController::class, 'action'])->name('collections.action');
 
             Route::get('globals', [GlobalController::class, 'index'])->name('globals.index');
             Route::get('globals/{key}', [GlobalController::class, 'edit'])->name('globals.edit');

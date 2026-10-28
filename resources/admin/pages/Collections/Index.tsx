@@ -1,17 +1,12 @@
 import { Link, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
+import { CellValue } from '../../components/ui/CellValue';
 import { SelectInput, TextInput } from '../../components/ui/Form';
 import { Icon } from '../../components/ui/Icon';
 import { AdminLayout } from '../../layouts/AdminLayout';
-import type { CollectionSchema } from '../../lib/types';
-import { cn, useShared, useT } from '../../lib/utils';
-
-interface Cell {
-    type: string;
-    value: unknown;
-}
+import type { Cell, CollectionSchema } from '../../lib/types';
+import { cn, useT } from '../../lib/utils';
 
 interface Row {
     id: string | number;
@@ -37,7 +32,7 @@ export default function CollectionIndex({
     collection: CollectionSchema;
     records: Paginated;
     query: { search: string; filters: Record<string, string> };
-    urls: { index: string; create: string };
+    urls: { index: string; create: string | null };
 }) {
     const t = useT();
     const [search, setSearch] = useState(query.search);
@@ -61,11 +56,13 @@ export default function CollectionIndex({
         <AdminLayout
             title={collection.label}
             actions={
-                <Link href={urls.create}>
-                    <Button variant="primary" icon="plus" tabIndex={-1}>
-                        {t('new_record')}
-                    </Button>
-                </Link>
+                urls.create && (
+                    <Link href={urls.create}>
+                        <Button variant="primary" icon="plus" tabIndex={-1}>
+                            {t('new_record')}
+                        </Button>
+                    </Link>
+                )
             }
         >
             <div className="flex flex-col gap-4">
@@ -78,7 +75,7 @@ export default function CollectionIndex({
                             <SelectInput
                                 key={field}
                                 aria-label={collection.fields.find((candidate) => candidate.name === field)?.label ?? field}
-                                className="w-auto min-w-40"
+                                className="min-w-40 sm:w-auto!"
                                 placeholder={`${collection.fields.find((candidate) => candidate.name === field)?.label ?? field} · ${t('filter_all')}`}
                                 options={Object.entries(options).map(([value, label]) => ({ value, label }))}
                                 value={query.filters[field] ?? ''}
@@ -151,26 +148,4 @@ export default function CollectionIndex({
             </div>
         </AdminLayout>
     );
-}
-
-function CellValue({ cell }: { cell: Cell | undefined }) {
-    const t = useT();
-    const { admin } = useShared();
-
-    if (!cell || cell.value === null || cell.value === undefined || cell.value === '') {
-        return <span className="text-ink-faint">—</span>;
-    }
-
-    switch (cell.type) {
-        case 'boolean':
-            return <Badge tone={cell.value ? 'success' : 'neutral'}>{cell.value ? t('yes') : t('no')}</Badge>;
-        case 'image':
-            return <img src={String(cell.value)} alt="" className="size-10 rounded-[6px] bg-sunken object-cover" />;
-        case 'file':
-            return <Icon name="file" size={18} className="text-ink-soft" />;
-        case 'date':
-            return <span>{new Intl.DateTimeFormat(admin.locale, { dateStyle: 'medium' }).format(new Date(String(cell.value)))}</span>;
-        default:
-            return <span className="line-clamp-2">{String(cell.value)}</span>;
-    }
 }

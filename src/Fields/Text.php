@@ -8,6 +8,9 @@ class Text extends Field
 
     protected ?string $placeholder = null;
 
+    /** @var 'text'|'email'|'password' */
+    protected string $inputType = 'text';
+
     public function maxLength(int $maxLength): static
     {
         $this->maxLength = $maxLength;
@@ -22,6 +25,28 @@ class Text extends Field
         return $this;
     }
 
+    public function email(): static
+    {
+        $this->inputType = 'email';
+
+        return $this;
+    }
+
+    /**
+     * A password input; the form never receives the stored value back.
+     */
+    public function password(): static
+    {
+        $this->inputType = 'password';
+
+        return $this;
+    }
+
+    public function isPassword(): bool
+    {
+        return $this->inputType === 'password';
+    }
+
     public function type(): string
     {
         return 'text';
@@ -29,11 +54,11 @@ class Text extends Field
 
     protected function valueRules(): array
     {
-        return ['string', "max:{$this->maxLength}"];
+        return ['string', "max:{$this->maxLength}", ...($this->inputType === 'email' ? ['email'] : [])];
     }
 
     protected function extraSchema(): array
     {
-        return ['maxLength' => $this->maxLength, 'placeholder' => $this->placeholder];
+        return ['maxLength' => $this->maxLength, 'placeholder' => $this->placeholder, 'inputType' => $this->inputType];
     }
 }

@@ -12,16 +12,17 @@ use Illuminate\Support\Facades\Gate;
  */
 class Navigation
 {
-    /** @var array<string, array{label: string, url: Closure|string, icon: string, ability: ?string, group: ?string, active: Closure|string, sort: int}> */
+    /** @var array<string, array{label: string, url: Closure|string, icon: string, ability: ?string, group: ?string, active: Closure|string, sort: int, badge: ?Closure}> */
     protected array $items = [];
 
     /**
      * @param  Closure(): string|string  $url
      * @param  Closure(): bool|string  $active  route name pattern marking the entry active, e.g. "content.admin.pages.*", or a callback
+     * @param  (Closure(): ?int)|null  $badge  count shown next to the entry
      */
-    public function add(string $key, string $label, Closure|string $url, string $icon = 'square', ?string $ability = null, ?string $group = null, Closure|string $active = '', int $sort = 100): static
+    public function add(string $key, string $label, Closure|string $url, string $icon = 'square', ?string $ability = null, ?string $group = null, Closure|string $active = '', int $sort = 100, ?Closure $badge = null): static
     {
-        $this->items[$key] = compact('label', 'url', 'icon', 'ability', 'group', 'active', 'sort');
+        $this->items[$key] = compact('label', 'url', 'icon', 'ability', 'group', 'active', 'sort', 'badge');
 
         return $this;
     }
@@ -34,7 +35,7 @@ class Navigation
     }
 
     /**
-     * @return list<array{key: string, label: string, url: string, icon: string, group: ?string, active: bool}>
+     * @return list<array{key: string, label: string, url: string, icon: string, group: ?string, active: bool, badge: ?int}>
      */
     public function forUser(?Authenticatable $user): array
     {
@@ -48,6 +49,7 @@ class Navigation
                 'icon' => $item['icon'],
                 'group' => $item['group'] ? __($item['group']) : null,
                 'active' => $item['active'] instanceof Closure ? (bool) ($item['active'])() : ($item['active'] !== '' && request()->routeIs($item['active'])),
+                'badge' => $item['badge'] ? (($item['badge'])() ?: null) : null,
             ])
             ->values()
             ->all();

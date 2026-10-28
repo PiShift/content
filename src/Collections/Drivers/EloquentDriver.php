@@ -109,11 +109,20 @@ class EloquentDriver implements CollectionDriver
         foreach ($collection->fieldSet()->fields() as $field) {
             $name = $field->getName();
 
-            if (! array_key_exists($name, $data) || ! $this->hasAttribute($record, $name)) {
+            if ($field->isReadonly() || ! array_key_exists($name, $data) || ! $this->hasAttribute($record, $name)) {
                 continue;
             }
 
             $this->write($record, $field, $data[$name]);
+        }
+
+        // Values the admin derived from fields (e.g. an upload's original file name).
+        $fieldNames = array_map(fn (Field $field): string => $field->getName(), $collection->fieldSet()->fields());
+
+        foreach (array_diff_key($data, array_flip($fieldNames)) as $attribute => $value) {
+            if ($record->isFillable($attribute)) {
+                $record->setAttribute($attribute, $value);
+            }
         }
 
         if ($this->fillUsing) {

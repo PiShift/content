@@ -6,6 +6,8 @@ import { LinkField } from './LinkField';
 import { MediaField } from './MediaField';
 import { RichTextField } from './RichTextField';
 import { RepeaterField } from './RepeaterField';
+import { ReadonlyField } from './ReadonlyField';
+import { UploadField } from './UploadField';
 
 export interface FieldProps {
     field: FieldSchema;
@@ -39,7 +41,13 @@ export function FieldRenderer(props: FieldProps) {
 }
 
 function FieldInput(props: FieldProps) {
+    if (props.field.readonly) {
+        return <ReadonlyField {...props} />;
+    }
+
     switch (props.field.type) {
+        case 'upload':
+            return <UploadField {...props} />;
         case 'repeater':
             return <RepeaterField {...props} />;
         case 'link':
@@ -133,7 +141,17 @@ function ScalarField({ field, value, onChange, locale, path, errors }: FieldProp
                 );
             break;
         default:
-            input = <TextInput {...common} maxLength={field.maxLength} value={(current as string) ?? ''} onChange={(event) => set(event.target.value)} />;
+            input = (
+                <TextInput
+                    {...common}
+                    type={field.inputType ?? 'text'}
+                    dir={field.inputType && field.inputType !== 'text' ? 'ltr' : common.dir}
+                    autoComplete={field.inputType === 'password' ? 'new-password' : undefined}
+                    maxLength={field.maxLength}
+                    value={(current as string) ?? ''}
+                    onChange={(event) => set(event.target.value)}
+                />
+            );
     }
 
     return (

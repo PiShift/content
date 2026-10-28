@@ -28,6 +28,8 @@ abstract class Field
     /** @var list<mixed> */
     protected array $extraRules = [];
 
+    protected bool $readonly = false;
+
     final public function __construct(protected string $name) {}
 
     public static function make(string $name): static
@@ -93,6 +95,11 @@ abstract class Field
     public static function file(string $name): File
     {
         return File::make($name);
+    }
+
+    public static function upload(string $name): Upload
+    {
+        return Upload::make($name);
     }
 
     /**
@@ -175,6 +182,21 @@ abstract class Field
         return $this;
     }
 
+    /**
+     * Shown in the form but never written (e.g. a status set by a background job).
+     */
+    public function readonly(bool $readonly = true): static
+    {
+        $this->readonly = $readonly;
+
+        return $this;
+    }
+
+    public function isReadonly(): bool
+    {
+        return $this->readonly;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -209,6 +231,7 @@ abstract class Field
             'help' => $this->help,
             'default' => $this->default,
             'visibleWhen' => $this->visibleWhen,
+            'readonly' => $this->readonly,
             ...$this->extraSchema(),
         ];
     }

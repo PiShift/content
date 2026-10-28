@@ -5,6 +5,7 @@ namespace PiShift\Content;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use PiShift\Content\Admin\Dashboard;
 use PiShift\Content\Admin\Navigation;
 use PiShift\Content\Collections\CollectionRegistry;
 use PiShift\Content\Collections\CollectionType;
@@ -35,7 +36,16 @@ class ContentServiceProvider extends ServiceProvider
 
         $this->app->singleton(ContentManager::class);
 
+        $this->app->singleton(Dashboard::class);
+
         $this->app->singleton(Navigation::class, fn (): Navigation => (new Navigation)->add(
+            key: 'dashboard',
+            label: 'content::admin.dashboard',
+            url: fn (): string => route('content.admin.home'),
+            icon: 'home',
+            active: 'content.admin.home',
+            sort: 0,
+        )->add(
             key: 'pages',
             label: 'content::admin.pages',
             url: fn (): string => route('content.admin.pages.index'),
@@ -74,6 +84,7 @@ class ContentServiceProvider extends ServiceProvider
                     group: $collection->group(),
                     active: fn (): bool => request()->routeIs('content.admin.collections.*') && request()->route('collection') === $collection->key(),
                     sort: $collection->sort(),
+                    badge: fn (): ?int => $collection->navigationBadge(),
                 );
             }
         });

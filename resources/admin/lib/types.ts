@@ -21,6 +21,9 @@ export interface FieldSchema {
     itemLabel?: string | null;
     visibleWhen?: { field: string; values: string[] } | null;
     storesPath?: boolean;
+    readonly?: boolean;
+    inputType?: 'text' | 'email' | 'password';
+    maxSize?: number;
 }
 
 export interface CollectionSchema {
@@ -33,6 +36,25 @@ export interface CollectionSchema {
     columns: Record<string, string>;
     filters: Record<string, Record<string, string>>;
     searchable: boolean;
+    badges: Record<string, Record<string, Tone>>;
+    canCreate: boolean;
+}
+
+export type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+
+export interface Cell {
+    type: string;
+    value: unknown;
+    tone?: Tone;
+}
+
+export interface RecordAction {
+    key: string;
+    label: string;
+    icon: string;
+    tone: 'primary' | 'neutral' | 'danger';
+    confirm: string | null;
+    url: string;
 }
 
 export interface SectionTypeSchema {
@@ -70,6 +92,7 @@ export interface NavItem {
     icon: string;
     group: string | null;
     active: boolean;
+    badge: number | null;
 }
 
 export interface SharedProps {

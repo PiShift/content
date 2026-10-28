@@ -23,6 +23,16 @@ class FieldSet
     }
 
     /**
+     * Fields the admin may write (read-only ones excluded).
+     *
+     * @return list<Field>
+     */
+    public function writable(): array
+    {
+        return array_values(array_filter($this->fields, fn (Field $field): bool => ! $field->isReadonly()));
+    }
+
+    /**
      * @return list<array<string, mixed>>
      */
     public function toSchema(): array
@@ -37,7 +47,7 @@ class FieldSet
     {
         $rules = [];
 
-        foreach ($this->fields as $field) {
+        foreach ($this->writable() as $field) {
             $rules = [...$rules, ...$field->validationRules(ltrim("{$prefix}.{$field->getName()}", '.'), $localizer)];
         }
 

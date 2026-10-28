@@ -60,7 +60,10 @@ export function AdminLayout({ title, actions, children, wide = false }: { title:
                                             )}
                                         >
                                             <Icon name={item.icon} />
-                                            {item.label}
+                                            <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                                            {item.badge !== null && item.badge > 0 && (
+                                                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-warning-soft px-1.5 text-[11px] font-bold text-warning">{item.badge}</span>
+                                            )}
                                         </Link>
                                     </li>
                                 ))}
