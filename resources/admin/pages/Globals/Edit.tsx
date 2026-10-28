@@ -25,6 +25,7 @@ export default function GlobalEdit({ global, fields, data: initialData, can, url
     const [locale, setLocale] = useState(admin.contentLocales.includes(admin.locale) ? admin.locale : admin.contentLocales[0]);
     const [dirty, setDirty] = useState(false);
     const [saving, setSaving] = useState<false | 'draft' | 'publish'>(false);
+    const hasTranslatable = fields.some((field) => field.translatable || field.type === 'link' || (field.fields ?? []).some((sub) => sub.translatable || sub.type === 'link'));
 
     const save = (publish: boolean) => {
         setSaving(publish ? 'publish' : 'draft');
@@ -88,7 +89,9 @@ export default function GlobalEdit({ global, fields, data: initialData, can, url
                         <Icon name="arrow-back" size={16} className="rtl:rotate-180" />
                         {t('globals')}
                     </a>
-                    <Segmented label={t('language')} value={locale} onChange={setLocale} options={admin.contentLocales.map((code) => ({ value: code, label: code.toUpperCase() }))} />
+                    {hasTranslatable && (
+                        <Segmented label={t('language')} value={locale} onChange={setLocale} options={admin.contentLocales.map((code) => ({ value: code, label: code.toUpperCase() }))} />
+                    )}
                 </div>
 
                 {Object.keys(errors).length > 0 && (

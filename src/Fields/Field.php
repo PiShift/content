@@ -97,6 +97,11 @@ abstract class Field
         return File::make($name);
     }
 
+    public static function color(string $name): Color
+    {
+        return Color::make($name);
+    }
+
     public static function upload(string $name): Upload
     {
         return Upload::make($name);

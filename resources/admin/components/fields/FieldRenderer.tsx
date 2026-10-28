@@ -48,6 +48,8 @@ function FieldInput(props: FieldProps) {
     switch (props.field.type) {
         case 'upload':
             return <UploadField {...props} />;
+        case 'color':
+            return <ColorField {...props} />;
         case 'repeater':
             return <RepeaterField {...props} />;
         case 'link':
@@ -70,6 +72,36 @@ function ToggleField({ field, value, onChange, path, errors }: FieldProps) {
     return (
         <FieldWrapper help={field.help} error={errors[path]}>
             <Switch id={id} checked={Boolean(value)} onChange={onChange} label={field.label} />
+        </FieldWrapper>
+    );
+}
+
+function ColorField({ field, value, onChange, path, errors }: FieldProps) {
+    const id = useId();
+    const current = typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value) ? value : '';
+    const fallback = typeof field.default === 'string' ? field.default : '#000000';
+
+    return (
+        <FieldWrapper id={id} label={field.label} required={field.required} help={field.help} error={errors[path]}>
+            <div className="flex items-center gap-2">
+                <input
+                    type="color"
+                    aria-label={field.label}
+                    value={current || fallback}
+                    onChange={(event) => onChange(event.target.value)}
+                    className="h-10 w-12 shrink-0 cursor-pointer rounded-control border border-line-strong bg-panel p-1"
+                />
+                <TextInput
+                    id={id}
+                    dir="ltr"
+                    maxLength={7}
+                    invalid={Boolean(errors[path])}
+                    placeholder={fallback}
+                    value={typeof value === 'string' ? value : ''}
+                    onChange={(event) => onChange(event.target.value || null)}
+                    className="max-w-36 font-mono text-sm"
+                />
+            </div>
         </FieldWrapper>
     );
 }
