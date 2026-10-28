@@ -93,6 +93,7 @@ export function SectionEditor({
                         locale={locale}
                         path={`sections.${index}.data.${field.name}`}
                         errors={errors}
+                        siblings={section.data}
                     />
                 ))}
             </div>

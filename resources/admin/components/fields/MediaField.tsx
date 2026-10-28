@@ -57,7 +57,7 @@ export function MediaField({ field, value, onChange, path, errors }: FieldProps)
                     )}
                 </div>
             </div>
-            <MediaPicker open={picking} onClose={() => setPicking(false)} type={type} onPick={(picked) => onChange(picked.id)} />
+            <MediaPicker open={picking} onClose={() => setPicking(false)} type={type} onPick={(picked) => onChange(field.storesPath ? picked.path : picked.id)} />
         </FieldWrapper>
     );
 }

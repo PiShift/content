@@ -19,6 +19,20 @@ export interface FieldSchema {
     withLabel?: boolean;
     fields?: FieldSchema[];
     itemLabel?: string | null;
+    visibleWhen?: { field: string; values: string[] } | null;
+    storesPath?: boolean;
+}
+
+export interface CollectionSchema {
+    key: string;
+    label: string;
+    singularLabel: string;
+    icon: string;
+    titleField: string;
+    fields: FieldSchema[];
+    columns: Record<string, string>;
+    filters: Record<string, Record<string, string>>;
+    searchable: boolean;
 }
 
 export interface SectionTypeSchema {

@@ -74,7 +74,7 @@ class Repeater extends Field
         return ['array'];
     }
 
-    public function rules(string $path, Localizer $localizer): array
+    public function validationRules(string $path, Localizer $localizer): array
     {
         $rules = [
             $path => array_values(array_filter([
@@ -88,7 +88,7 @@ class Repeater extends Field
         ];
 
         foreach ($this->fields as $field) {
-            $rules = [...$rules, ...$field->rules("{$path}.*.{$field->getName()}", $localizer)];
+            $rules = [...$rules, ...$field->validationRules("{$path}.*.{$field->getName()}", $localizer)];
         }
 
         return $rules;

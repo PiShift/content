@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use PiShift\Content\Http\Controllers\Admin\AuthController;
+use PiShift\Content\Http\Controllers\Admin\CollectionController;
 use PiShift\Content\Http\Controllers\Admin\GlobalController;
 use PiShift\Content\Http\Controllers\Admin\LocaleController;
 use PiShift\Content\Http\Controllers\Admin\MediaController;
@@ -37,6 +38,13 @@ Route::middleware([...config('content.admin.middleware', ['web']), SetAdminLocal
             Route::get('media/{media}', [MediaController::class, 'show'])->name('media.show');
             Route::put('media/{media}', [MediaController::class, 'update'])->name('media.update');
             Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+
+            Route::get('collections/{collection}', [CollectionController::class, 'index'])->name('collections.index');
+            Route::get('collections/{collection}/create', [CollectionController::class, 'create'])->name('collections.create');
+            Route::post('collections/{collection}', [CollectionController::class, 'store'])->name('collections.store');
+            Route::get('collections/{collection}/{record}', [CollectionController::class, 'edit'])->name('collections.edit');
+            Route::put('collections/{collection}/{record}', [CollectionController::class, 'update'])->name('collections.update');
+            Route::delete('collections/{collection}/{record}', [CollectionController::class, 'destroy'])->name('collections.destroy');
 
             Route::get('globals', [GlobalController::class, 'index'])->name('globals.index');
             Route::get('globals/{key}', [GlobalController::class, 'edit'])->name('globals.edit');

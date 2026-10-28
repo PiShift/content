@@ -34,6 +34,7 @@ return [
     'discover' => [
         'sections' => ['path' => app_path('Content/Sections'), 'namespace' => 'App\\Content\\Sections'],
         'globals' => ['path' => app_path('Content/Globals'), 'namespace' => 'App\\Content\\Globals'],
+        'collections' => ['path' => app_path('Content/Collections'), 'namespace' => 'App\\Content\\Collections'],
     ],
 
     /*

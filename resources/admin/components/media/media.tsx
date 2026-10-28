@@ -4,6 +4,7 @@ import { requestJson } from '../../lib/http';
 export interface MediaItem {
     id: number;
     url: string;
+    path: string;
     name: string;
     mime: string | null;
     size: number;

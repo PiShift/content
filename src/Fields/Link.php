@@ -30,11 +30,11 @@ class Link extends Field
         return ['array'];
     }
 
-    public function rules(string $path, Localizer $localizer): array
+    public function validationRules(string $path, Localizer $localizer): array
     {
         return [
             $path => ['nullable', 'array'],
-            "{$path}.url" => [$this->required ? 'required' : 'nullable', 'string', 'max:2048'],
+            "{$path}.url" => [...$this->presenceRules($path), 'string', 'max:2048'],
             "{$path}.label" => ['nullable', 'array'],
             "{$path}.label.*" => ['nullable', 'string', 'max:255'],
             "{$path}.new_tab" => ['nullable', 'boolean'],

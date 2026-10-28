@@ -38,7 +38,7 @@ class FieldSet
         $rules = [];
 
         foreach ($this->fields as $field) {
-            $rules = [...$rules, ...$field->rules(ltrim("{$prefix}.{$field->getName()}", '.'), $localizer)];
+            $rules = [...$rules, ...$field->validationRules(ltrim("{$prefix}.{$field->getName()}", '.'), $localizer)];
         }
 
         return $rules;

@@ -15,6 +15,19 @@ class File extends Field
     /** @var list<string> */
     protected array $accept = [];
 
+    protected bool $storesPath = false;
+
+    /**
+     * Store the file's path on the media disk instead of its media id, for models that keep
+     * a path column (existing tables).
+     */
+    public function storesPath(bool $storesPath = true): static
+    {
+        $this->storesPath = $storesPath;
+
+        return $this;
+    }
+
     /**
      * @param  list<string>  $mimeTypes  e.g. ['application/pdf']
      */
@@ -83,6 +96,6 @@ class File extends Field
 
     protected function extraSchema(): array
     {
-        return ['accept' => $this->accept];
+        return ['accept' => $this->accept, 'storesPath' => $this->storesPath];
     }
 }

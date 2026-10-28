@@ -43,6 +43,7 @@ class Media extends Model
         return [
             'id' => $this->id,
             'url' => $this->url,
+            'path' => $this->path,
             'name' => $this->name,
             'mime' => $this->mime,
             'size' => $this->size,

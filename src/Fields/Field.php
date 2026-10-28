@@ -22,6 +22,12 @@ abstract class Field
 
     protected mixed $default = null;
 
+    /** @var array{field: string, values: list<string>}|null */
+    protected ?array $visibleWhen = null;
+
+    /** @var list<mixed> */
+    protected array $extraRules = [];
+
     final public function __construct(protected string $name) {}
 
     public static function make(string $name): static
@@ -67,6 +73,11 @@ abstract class Field
     public static function date(string $name): Date
     {
         return Date::make($name);
+    }
+
+    public static function dateTime(string $name): DateTime
+    {
+        return DateTime::make($name);
     }
 
     public static function link(string $name): Link
@@ -139,6 +150,31 @@ abstract class Field
         return $this;
     }
 
+    /**
+     * Show the field only when a sibling field has one of these values (e.g. a deadline only
+     * for tenders). Hidden fields are not required.
+     *
+     * @param  string|list<string>  $values
+     */
+    public function visibleWhen(string $field, string|array $values): static
+    {
+        $this->visibleWhen = ['field' => $field, 'values' => array_values((array) $values)];
+
+        return $this;
+    }
+
+    /**
+     * Extra validation rules for the value, e.g. ['regex:/^[a-z0-9-]+$/'].
+     *
+     * @param  list<mixed>  $rules
+     */
+    public function rules(array $rules): static
+    {
+        $this->extraRules = [...$this->extraRules, ...$rules];
+
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -172,6 +208,7 @@ abstract class Field
             'required' => $this->required,
             'help' => $this->help,
             'default' => $this->default,
+            'visibleWhen' => $this->visibleWhen,
             ...$this->extraSchema(),
         ];
     }
@@ -181,17 +218,40 @@ abstract class Field
      *
      * @return array<string, list<mixed>>
      */
-    public function rules(string $path, Localizer $localizer): array
+    public function validationRules(string $path, Localizer $localizer): array
     {
+        $values = [...$this->valueRules(), ...$this->extraRules];
+
         if (! $this->translatable) {
-            return [$path => [$this->required ? 'required' : 'nullable', ...$this->valueRules()]];
+            return [$path => [...$this->presenceRules($path), ...$values]];
         }
 
         return [
-            $path => [$this->required ? 'required' : 'nullable', 'array'],
-            "{$path}.{$localizer->defaultLocale()}" => [$this->required ? 'required' : 'nullable', ...$this->valueRules()],
-            "{$path}.*" => ['nullable', ...$this->valueRules()],
+            $path => [...$this->presenceRules($path), 'array'],
+            "{$path}.{$localizer->defaultLocale()}" => [...$this->presenceRules($path), ...$values],
+            "{$path}.*" => ['nullable', ...$values],
         ];
+    }
+
+    /**
+     * ["required"], ["nullable"], or a "required_if" on the sibling field that controls the
+     * field's visibility (nullable while hidden).
+     *
+     * @return list<string>
+     */
+    protected function presenceRules(string $path): array
+    {
+        if (! $this->required) {
+            return ['nullable'];
+        }
+
+        if ($this->visibleWhen === null) {
+            return ['required'];
+        }
+
+        $sibling = (str_contains($path, '.') ? Str::beforeLast($path, '.').'.' : '').$this->visibleWhen['field'];
+
+        return ['required_if:'.$sibling.','.implode(',', $this->visibleWhen['values']), 'nullable'];
     }
 
     /**

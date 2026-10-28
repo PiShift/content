@@ -108,6 +108,7 @@ export function RepeaterField({ field, value, onChange, locale, path, errors }: 
                                             locale={locale}
                                             path={`${itemPath}.${subField.name}`}
                                             errors={errors}
+                                            siblings={item}
                                         />
                                     ))}
                                 </div>

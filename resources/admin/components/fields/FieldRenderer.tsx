@@ -16,12 +16,20 @@ export interface FieldProps {
     /** Dotted path matching the server's validation keys, e.g. "sections.0.data.title". */
     path: string;
     errors: Record<string, string>;
+    /** Values of the fields next to this one, for conditional fields (visibleWhen). */
+    siblings?: Record<string, unknown>;
 }
 
 /**
  * Picks the input for a field schema sent by the server.
  */
 export function FieldRenderer(props: FieldProps) {
+    const condition = props.field.visibleWhen;
+
+    if (condition && props.siblings && !condition.values.includes(String(props.siblings[condition.field] ?? ''))) {
+        return null;
+    }
+
     // data-field-path lets the live preview jump to a field.
     return (
         <div data-field-path={props.path} className="min-w-0 scroll-mt-24">
@@ -68,7 +76,7 @@ function ScalarField({ field, value, onChange, locale, path, errors }: FieldProp
     const current = field.translatable ? translations[locale] : value;
     const errorKey = field.translatable ? `${path}.${locale}` : path;
     const error = errors[errorKey] ?? (field.translatable ? otherLocaleError(errors, path, locale) : errors[path]);
-    const dir = field.translatable ? localeDir(locale) : field.type === 'number' || field.type === 'date' ? 'ltr' : 'auto';
+    const dir = field.translatable ? localeDir(locale) : ['number', 'date', 'datetime'].includes(field.type) ? 'ltr' : 'auto';
 
     const set = (next: unknown) => onChange(field.translatable ? { ...translations, [locale]: next } : next);
 
@@ -103,7 +111,10 @@ function ScalarField({ field, value, onChange, locale, path, errors }: FieldProp
             );
             break;
         case 'date':
-            input = <TextInput {...common} type="date" value={(current as string) ?? ''} onChange={(event) => set(event.target.value || null)} />;
+            input = <TextInput {...common} type="date" value={((current as string) ?? '').slice(0, 10)} onChange={(event) => set(event.target.value || null)} />;
+            break;
+        case 'datetime':
+            input = <TextInput {...common} type="datetime-local" value={((current as string) ?? '').slice(0, 16)} onChange={(event) => set(event.target.value || null)} />;
             break;
         case 'select':
         case 'icon':

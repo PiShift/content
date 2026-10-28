@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Gate;
  */
 class Navigation
 {
-    /** @var array<string, array{label: string, url: Closure|string, icon: string, ability: ?string, group: ?string, active: string, sort: int}> */
+    /** @var array<string, array{label: string, url: Closure|string, icon: string, ability: ?string, group: ?string, active: Closure|string, sort: int}> */
     protected array $items = [];
 
     /**
      * @param  Closure(): string|string  $url
-     * @param  string  $active  route name pattern marking the entry active, e.g. "content.admin.pages.*"
+     * @param  Closure(): bool|string  $active  route name pattern marking the entry active, e.g. "content.admin.pages.*", or a callback
      */
-    public function add(string $key, string $label, Closure|string $url, string $icon = 'square', ?string $ability = null, ?string $group = null, string $active = '', int $sort = 100): static
+    public function add(string $key, string $label, Closure|string $url, string $icon = 'square', ?string $ability = null, ?string $group = null, Closure|string $active = '', int $sort = 100): static
     {
         $this->items[$key] = compact('label', 'url', 'icon', 'ability', 'group', 'active', 'sort');
 
@@ -47,7 +47,7 @@ class Navigation
                 'url' => $item['url'] instanceof Closure ? ($item['url'])() : $item['url'],
                 'icon' => $item['icon'],
                 'group' => $item['group'] ? __($item['group']) : null,
-                'active' => $item['active'] !== '' && request()->routeIs($item['active']),
+                'active' => $item['active'] instanceof Closure ? (bool) ($item['active'])() : ($item['active'] !== '' && request()->routeIs($item['active'])),
             ])
             ->values()
             ->all();

@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use PiShift\Content\Admin\Navigation;
+use PiShift\Content\Collections\CollectionRegistry;
+use PiShift\Content\Collections\CollectionType;
 use PiShift\Content\Console\MakeSectionCommand;
 use PiShift\Content\Globals\GlobalRegistry;
 use PiShift\Content\Sections\SectionRegistry;
@@ -24,6 +26,11 @@ class ContentServiceProvider extends ServiceProvider
         $this->app->singleton(GlobalRegistry::class, fn (): GlobalRegistry => (new GlobalRegistry)->discover(
             config('content.discover.globals.path'),
             config('content.discover.globals.namespace'),
+        ));
+
+        $this->app->singleton(CollectionRegistry::class, fn (): CollectionRegistry => (new CollectionRegistry)->discover(
+            config('content.discover.collections.path'),
+            config('content.discover.collections.namespace'),
         ));
 
         $this->app->singleton(ContentManager::class);
@@ -53,6 +60,23 @@ class ContentServiceProvider extends ServiceProvider
             active: 'content.admin.media.*',
             sort: 30,
         ));
+
+        // One menu entry per collection.
+        $this->app->afterResolving(Navigation::class, function (Navigation $navigation, $app): void {
+            foreach ($app->make(CollectionRegistry::class)->all() as $collection) {
+                /** @var CollectionType $collection */
+                $navigation->add(
+                    key: 'collection.'.$collection->key(),
+                    label: $collection->label(),
+                    url: fn (): string => route('content.admin.collections.index', $collection->key()),
+                    icon: $collection->icon(),
+                    ability: $collection->ability(),
+                    group: $collection->group(),
+                    active: fn (): bool => request()->routeIs('content.admin.collections.*') && request()->route('collection') === $collection->key(),
+                    sort: $collection->sort(),
+                );
+            }
+        });
     }
 
     public function boot(): void

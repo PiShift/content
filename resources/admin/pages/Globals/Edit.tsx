@@ -111,6 +111,7 @@ export default function GlobalEdit({ global, fields, data: initialData, can, url
                             locale={locale}
                             path={`data.${field.name}`}
                             errors={errors}
+                            siblings={data}
                         />
                     ))}
                 </section>
