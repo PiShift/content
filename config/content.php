@@ -87,6 +87,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Admin
+    |--------------------------------------------------------------------------
+    |
+    | The admin is a React + Inertia app. While the package lives inside a
+    | project, the project's Vite builds it from the "vite" entries.
+    |
+    */
+
+    'admin' => [
+        'path' => env('CONTENT_ADMIN_PATH', 'manage'),
+        'name' => env('CONTENT_ADMIN_NAME', env('APP_NAME', 'Admin')),
+        'guard' => 'web',
+        'locales' => ['ar', 'fr'],
+        'vite' => ['resources/admin/app.tsx'],
+        'middleware' => ['web'],
+    ],
+
+    // Pages the application's own routes depend on: they can't be deleted from the admin.
+    'protected_pages' => [],
+
+    /*
+    |--------------------------------------------------------------------------
     | Media
     |--------------------------------------------------------------------------
     */

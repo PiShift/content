@@ -5,6 +5,7 @@ namespace PiShift\Content;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use PiShift\Content\Admin\Navigation;
 use PiShift\Content\Console\MakeSectionCommand;
 use PiShift\Content\Globals\GlobalRegistry;
 use PiShift\Content\Sections\SectionRegistry;
@@ -26,15 +27,33 @@ class ContentServiceProvider extends ServiceProvider
         ));
 
         $this->app->singleton(ContentManager::class);
+
+        $this->app->singleton(Navigation::class, fn (): Navigation => (new Navigation)->add(
+            key: 'pages',
+            label: 'content::admin.pages',
+            url: fn (): string => route('content.admin.pages.index'),
+            icon: 'pages',
+            ability: 'content.manage',
+            active: 'content.admin.pages.*',
+            sort: 10,
+        ));
     }
 
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'content');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'content');
+        $this->loadRoutesFrom(__DIR__.'/../routes/admin.php');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         Blade::componentNamespace('PiShift\\Content\\View\\Components', 'content');
+
+        // Let Inertia (and its test assertions) find the admin's page components.
+        config(['inertia.pages.paths' => array_values(array_unique([
+            ...config('inertia.pages.paths', []),
+            __DIR__.'/../resources/admin/pages',
+        ]))]);
 
         // Projects override these in their AuthServiceProvider/AppServiceProvider.
         foreach (['content.manage', 'content.publish'] as $ability) {

@@ -1,0 +1,62 @@
+import type { SVGProps } from 'react';
+
+/**
+ * Small stroke icon set used by the admin (24px grid, currentColor).
+ */
+const PATHS: Record<string, string> = {
+    pages: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6',
+    plus: 'M12 5v14M5 12h14',
+    trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
+    copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
+    eye: 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+    'eye-off': 'M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6C3.9 8.3 2 12 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2',
+    grip: 'M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01',
+    'chevron-down': 'M6 9l6 6 6-6',
+    'chevron-right': 'M9 6l6 6-6 6',
+    'chevron-left': 'M15 6l-6 6 6 6',
+    'arrow-back': 'M19 12H5M11 18l-6-6 6-6',
+    external: 'M14 4h6v6M20 4l-9 9M18 14v6H4V6h6',
+    globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18',
+    settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z',
+    image: 'M4 5h16v14H4zM4 15l4-4 5 5M14 14l2-2 4 4M15 9h.01',
+    file: 'M7 3h7l5 5v13H7zM14 3v5h5',
+    logout: 'M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11',
+    check: 'M5 12l5 5L20 7',
+    x: 'M6 6l12 12M18 6L6 18',
+    menu: 'M4 6h16M4 12h16M4 18h16',
+    alert: 'M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z',
+    square: 'M5 5h14v14H5z',
+    layout: 'M4 4h16v16H4zM4 10h16M10 10v10',
+    text: 'M5 6h14M5 12h14M5 18h9',
+    grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+    star: 'M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z',
+    users: 'M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 20v-2a4 4 0 0 0-3-3.9M16 2.1a4 4 0 0 1 0 7.8',
+    chart: 'M4 20V10M10 20V4M16 20v-6M22 20H2',
+    megaphone: 'M3 11v2a2 2 0 0 0 2 2h1l3 5h2l-1-5h2l7 4V5l-7 4H5a2 2 0 0 0-2 2z',
+    quote: 'M7 7h4v6H5v-2a4 4 0 0 1 2-4zM15 7h4v6h-6v-2a4 4 0 0 1 2-4z',
+    list: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',
+    link: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1',
+    download: 'M12 4v12M6 10l6 6 6-6M4 20h16',
+    news: 'M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5',
+    steps: 'M4 18h5v-5h5V8h6',
+    undo: 'M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-4',
+};
+
+export function Icon({ name, size = 18, ...props }: { name: string; size?: number } & SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            width={size}
+            height={size}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.75}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            {...props}
+        >
+            <path d={PATHS[name] ?? PATHS.square} />
+        </svg>
+    );
+}

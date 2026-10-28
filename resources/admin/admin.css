@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+
+@source './**/*.tsx';
+
+/* Admin design tokens. Projects can re-tint the accent with --color-accent. */
+@theme {
+    --font-sans: 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+
+    --color-canvas: #f4f5f1;
+    --color-panel: #ffffff;
+    --color-sunken: #eef0eb;
+    --color-line: #dfe3dc;
+    --color-line-strong: #c9cfc5;
+    --color-ink: #17211b;
+    --color-ink-soft: #4b5a51;
+    --color-ink-faint: #7d8a82;
+
+    --color-accent: #1f6f45;
+    --color-accent-strong: #165535;
+    --color-accent-soft: #e4f0e8;
+    --color-on-accent: #ffffff;
+
+    --color-danger: #b42318;
+    --color-danger-soft: #fdecea;
+    --color-warning: #9a5b00;
+    --color-warning-soft: #fdf3dc;
+    --color-info: #1d5ea8;
+    --color-info-soft: #e7f0fb;
+
+    --radius-control: 0.5rem;
+    --radius-panel: 0.75rem;
+
+    --shadow-panel: 0 1px 2px rgb(23 33 27 / 0.06), 0 1px 1px rgb(23 33 27 / 0.03);
+    --shadow-pop: 0 12px 32px -8px rgb(23 33 27 / 0.25);
+}
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-canvas text-ink font-sans text-[15px] leading-relaxed;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-accent;
+    }
+
+    ::selection {
+        @apply bg-accent-soft;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
