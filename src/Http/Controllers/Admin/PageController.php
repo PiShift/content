@@ -2,8 +2,10 @@
 
 namespace PiShift\Content\Http\Controllers\Admin;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -12,6 +14,7 @@ use Inertia\Response;
 use PiShift\Content\ContentManager;
 use PiShift\Content\Document\PageDocument;
 use PiShift\Content\Models\Page;
+use PiShift\Content\Models\Revision;
 
 class PageController
 {
@@ -89,9 +92,65 @@ class PageController
                 'update' => route('content.admin.pages.update', $page),
                 'destroy' => route('content.admin.pages.destroy', $page),
                 'preview' => $this->content->previewUrl($page),
+                'livePreview' => route('content.admin.pages.preview', $page),
+                'revisions' => route('content.admin.pages.revisions', $page),
+                'restore' => route('content.admin.pages.restore', ['page' => $page, 'revision' => '__ID__']),
                 'view' => $page->path() !== null ? url($page->path()) : null,
+                'media' => MediaController::urls(),
+                'mediaAccept' => MediaController::acceptAttribute(),
             ],
         ]);
+    }
+
+    /**
+     * Render the editor's current (unsaved) document, for the live preview frame.
+     */
+    public function preview(Request $request, Page $page): HttpResponse
+    {
+        $request->validate([
+            'document' => ['required', 'array'],
+            'locale' => ['nullable', Rule::in(config('content.locales', []))],
+        ]);
+
+        if ($request->filled('locale')) {
+            app()->setLocale($request->input('locale'));
+        }
+
+        $resolved = $this->content->resolveDocument($page, $request->input('document'));
+        $html = view($resolved->templateView(), ['page' => $resolved])->render();
+
+        $head = '<base href="'.e(url('/')).'/" target="_blank">';
+        $script = view('content::preview-script')->render();
+
+        $html = preg_replace('/<head(\s[^>]*)?>/i', '$0'.$head, $html, 1) ?? $html;
+        $html = str_contains($html, '</body>') ? str_replace('</body>', $script.'</body>', $html) : $html.$script;
+
+        return response($html)->header('X-Frame-Options', 'SAMEORIGIN');
+    }
+
+    /**
+     * Published versions of the page, newest first.
+     */
+    public function revisions(Page $page): JsonResponse
+    {
+        return response()->json($page->revisions()->with('user')->limit(50)->get()->map(fn (Revision $revision): array => [
+            'id' => $revision->id,
+            'createdAt' => $revision->created_at?->toIso8601String(),
+            'user' => $revision->user?->name ?? $revision->user?->email,
+            'sections' => count($revision->content['sections'] ?? []),
+        ]));
+    }
+
+    /**
+     * Put a published version back into the draft; publishing makes it live again.
+     */
+    public function restore(Page $page, Revision $revision): RedirectResponse
+    {
+        abort_unless($revision->revisionable_type === $page->getMorphClass() && (int) $revision->revisionable_id === $page->id, 404);
+
+        $page->restore($revision);
+
+        return redirect()->route('content.admin.pages.edit', $page)->with('content.success', __('content::admin.revision_restored'));
     }
 
     public function update(Request $request, Page $page): RedirectResponse

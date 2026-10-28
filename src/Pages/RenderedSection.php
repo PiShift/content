@@ -36,6 +36,15 @@ class RenderedSection
             ->implode(' ');
     }
 
+    /**
+     * Marks an element as showing a field, so clicking it in the admin preview opens that
+     * field: <h2{!! $section->attr('title') !!}>. Outputs nothing outside the preview.
+     */
+    public function attr(string $field): string
+    {
+        return $this->page?->isPreview ? ' data-content-field="'.e($field).'"' : '';
+    }
+
     public function viewExists(): bool
     {
         return View::exists($this->type->view());

@@ -1,34 +1,67 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { useT } from '../../lib/utils';
-import { FieldWrapper, TextInput } from '../ui/Form';
+import { formatSize, useMediaItem } from '../media/media';
+import { MediaPicker, MediaThumb } from '../media/MediaPicker';
+import { Button } from '../ui/Button';
+import { FieldWrapper } from '../ui/Form';
 import { Icon } from '../ui/Icon';
 import type { FieldProps } from './FieldRenderer';
 
 /**
- * Image or file reference: a media library id, or a path/URL for imported content.
+ * Image or file from the media library (stored as its id). Imported content may hold a
+ * path or URL instead; it keeps working and can be replaced from the library.
  */
 export function MediaField({ field, value, onChange, path, errors }: FieldProps) {
     const t = useT();
     const id = useId();
-    const text = value === null || value === undefined ? '' : String(value);
-    const previewUrl = typeof value === 'string' && /\.(png|jpe?g|webp|gif|svg)$/i.test(value) ? toUrl(value) : null;
+    const [picking, setPicking] = useState(false);
+    const mediaId = typeof value === 'number' ? value : typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : null;
+    const item = useMediaItem(mediaId);
+    const legacyPath = mediaId === null && typeof value === 'string' && value !== '' ? value : null;
+    const type = field.type === 'image' ? 'image' : 'file';
 
     return (
-        <FieldWrapper id={id} label={field.label} required={field.required} help={field.help ?? t(field.type === 'image' ? 'image_path' : 'file_path')} error={errors[path]}>
-            <div className="flex items-center gap-3">
-                <div className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-control border border-line bg-sunken text-ink-faint">
-                    {previewUrl ? <img src={previewUrl} alt="" className="size-full object-cover" /> : <Icon name={field.type === 'image' ? 'image' : 'file'} />}
+        <FieldWrapper id={id} label={field.label} required={field.required} help={field.help} error={errors[path]}>
+            <div className="flex items-center gap-3 rounded-control border border-line bg-panel p-2">
+                {item ? (
+                    <MediaThumb item={item} className="size-16 shrink-0 rounded-[6px]" />
+                ) : legacyPath && type === 'image' ? (
+                    <img src={toUrl(legacyPath)} alt="" className="size-16 shrink-0 rounded-[6px] bg-sunken object-cover" />
+                ) : (
+                    <span className="grid size-16 shrink-0 place-items-center rounded-[6px] bg-sunken text-ink-faint">
+                        <Icon name={type === 'image' ? 'image' : 'file'} size={22} />
+                    </span>
+                )}
+                <div className="min-w-0 flex-1">
+                    {item ? (
+                        <>
+                            <p className="truncate text-sm font-medium">{item.name}</p>
+                            <p className="text-xs text-ink-faint" dir="ltr">
+                                {[item.width && item.height ? `${item.width}×${item.height}` : null, formatSize(item.size)].filter(Boolean).join(' · ')}
+                            </p>
+                        </>
+                    ) : legacyPath ? (
+                        <p className="truncate text-sm text-ink-soft" dir="ltr">
+                            {legacyPath}
+                        </p>
+                    ) : (
+                        <p className="text-sm text-ink-faint">{t('none')}</p>
+                    )}
                 </div>
-                <TextInput id={id} dir="ltr" value={text} invalid={Boolean(errors[path])} onChange={(event) => onChange(event.target.value === '' ? null : event.target.value)} />
+                <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
+                    <Button id={id} size="sm" icon={value ? undefined : 'plus'} onClick={() => setPicking(true)}>
+                        {value ? t('replace') : t('choose')}
+                    </Button>
+                    {value !== null && value !== undefined && value !== '' && !field.required && (
+                        <Button size="sm" variant="ghost" icon="x" onClick={() => onChange(null)} aria-label={t('remove')} />
+                    )}
+                </div>
             </div>
+            <MediaPicker open={picking} onClose={() => setPicking(false)} type={type} onPick={(picked) => onChange(picked.id)} />
         </FieldWrapper>
     );
 }
 
 function toUrl(path: string): string {
-    if (/^https?:\/\//.test(path) || path.startsWith('/')) {
-        return path;
-    }
-
-    return `/storage/${path}`;
+    return /^https?:\/\//.test(path) || path.startsWith('/') ? path : `/storage/${path}`;
 }

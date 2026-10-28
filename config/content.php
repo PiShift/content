@@ -116,6 +116,10 @@ return [
     'media' => [
         'disk' => 'public',
         'directory' => 'content',
+        // Max upload size in kilobytes.
+        'max_size' => 20480,
+        // SVG is left out on purpose: an uploaded SVG can carry scripts.
+        'extensions' => ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'ods', 'txt', 'zip', 'mp4', 'webm', 'mp3'],
     ],
 
 ];

@@ -1,9 +1,12 @@
 import { router } from '@inertiajs/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { LivePreview } from '../../components/editor/LivePreview';
 import { PageSettings, type PageMeta } from '../../components/editor/PageSettings';
+import { RevisionsModal } from '../../components/editor/RevisionsModal';
 import { SectionEditor } from '../../components/editor/SectionEditor';
 import { SectionLibrary } from '../../components/editor/SectionLibrary';
 import { SectionList } from '../../components/editor/SectionList';
+import { MediaContext, type MediaUrls } from '../../components/media/media';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Segmented } from '../../components/ui/Form';
@@ -29,7 +32,18 @@ interface Props {
     sectionTypes: SectionTypeSchema[];
     templates: Array<{ value: string; label: string }>;
     can: { publish: boolean };
-    urls: { index: string; update: string; destroy: string; preview: string; view: string | null };
+    urls: {
+        index: string;
+        update: string;
+        destroy: string;
+        preview: string;
+        livePreview: string;
+        revisions: string;
+        restore: string;
+        view: string | null;
+        media: MediaUrls;
+        mediaAccept: string;
+    };
 }
 
 const SETTINGS = '__settings';
@@ -48,6 +62,38 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
     const [libraryOpen, setLibraryOpen] = useState(false);
     const [removingId, setRemovingId] = useState<string | null>(null);
     const [deleting, setDeleting] = useState(false);
+    const [historyOpen, setHistoryOpen] = useState(false);
+    const [previewOpen, setPreviewOpen] = useState<boolean>(() => readPreference('content.preview', true));
+    const liveDocument = useMemo(() => ({ ...initialDocument, sections }), [initialDocument, sections]);
+
+    const togglePreview = () => {
+        setPreviewOpen((open) => {
+            writePreference('content.preview', !open);
+
+            return !open;
+        });
+    };
+
+    // A click in the live preview selects the section, then scrolls to the field if one was marked.
+    const selectFromPreview = useCallback(
+        (sectionId: string, field: string | null) => {
+            const index = sections.findIndex((section) => section.id === sectionId);
+            if (index === -1) {
+                return;
+            }
+
+            setSelectedId(sectionId);
+
+            window.setTimeout(() => {
+                const target =
+                    (field && window.document.querySelector<HTMLElement>(`[data-field-path="sections.${index}.data.${field}"]`)) ||
+                    window.document.querySelector<HTMLElement>('[data-section-editor]');
+                target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target?.querySelector<HTMLElement>('input, textarea, select, [contenteditable="true"]')?.focus({ preventScroll: true });
+            }, 60);
+        },
+        [sections],
+    );
 
     const changeSections = (next: SectionData[]) => {
         setSections(next);
@@ -162,6 +208,7 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
     const hasErrors = Object.keys(errors).length > 0;
 
     return (
+        <MediaContext.Provider value={{ urls: urls.media, accept: urls.mediaAccept }}>
         <AdminLayout
             wide
             title={pickText(meta.title, admin.locale) || page.key}
@@ -178,8 +225,11 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
                             <Badge tone={page.status === 'published' ? 'success' : 'neutral'}>{t(page.status)}</Badge>
                         )}
                     </span>
-                    <Button icon="eye" onClick={openPreview}>
-                        <span className="hidden md:inline">{t('preview')}</span>
+                    <Button icon="undo" onClick={() => setHistoryOpen(true)} aria-label={t('history')}>
+                        <span className="hidden xl:inline">{t('history')}</span>
+                    </Button>
+                    <Button icon={previewOpen ? 'eye-off' : 'eye'} onClick={togglePreview} aria-label={previewOpen ? t('hide_preview') : t('show_preview')}>
+                        <span className="hidden md:inline">{previewOpen ? t('hide_preview') : t('show_preview')}</span>
                     </Button>
                     <Button onClick={() => save(false)} loading={saving === 'draft'} disabled={saving !== false}>
                         {t('save_draft')}
@@ -198,6 +248,10 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
                     {t('pages')}
                 </a>
                 <div className="flex flex-wrap items-center gap-3">
+                    <button type="button" onClick={openPreview} className="inline-flex items-center gap-1.5 text-sm text-ink-soft hover:text-ink">
+                        <Icon name="external" size={16} />
+                        {t('preview')}
+                    </button>
                     {urls.view && page.status === 'published' && (
                         <a href={urls.view} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm text-ink-soft hover:text-ink">
                             <Icon name="external" size={16} />
@@ -220,7 +274,12 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
                 </p>
             )}
 
-            <div className="grid items-start gap-5 lg:grid-cols-[minmax(15rem,18rem)_minmax(0,1fr)] xl:grid-cols-[minmax(17rem,22rem)_minmax(0,1fr)]">
+            <div
+                className={cn(
+                    'grid items-start gap-5 lg:grid-cols-[minmax(15rem,18rem)_minmax(0,1fr)]',
+                    previewOpen ? '2xl:grid-cols-[17rem_minmax(22rem,1fr)_minmax(0,1.2fr)]' : 'xl:grid-cols-[minmax(17rem,22rem)_minmax(0,1fr)]',
+                )}
+            >
                 <aside className="flex flex-col gap-3 lg:sticky lg:top-20">
                     <button
                         type="button"
@@ -256,7 +315,7 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
                     </Button>
                 </aside>
 
-                <section className="min-w-0 rounded-panel border border-line bg-panel p-5 shadow-panel sm:p-6">
+                <section data-section-editor className="min-w-0 scroll-mt-24 rounded-panel border border-line bg-panel p-5 shadow-panel sm:p-6">
                     {selectedId === SETTINGS ? (
                         <PageSettings
                             meta={meta}
@@ -285,7 +344,21 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
                         <p className="py-10 text-center text-sm text-ink-faint">{t('select_section')}</p>
                     )}
                 </section>
+
+                {previewOpen && (
+                    <div className="lg:col-span-2 2xl:sticky 2xl:top-20 2xl:col-span-1 2xl:h-[calc(100dvh-6rem)]">
+                        <LivePreview url={urls.livePreview} document={liveDocument} locale={locale} onSelect={selectFromPreview} />
+                    </div>
+                )}
             </div>
+
+            <RevisionsModal
+                open={historyOpen}
+                onClose={() => setHistoryOpen(false)}
+                listUrl={urls.revisions}
+                restoreUrl={urls.restore}
+                onBeforeRestore={() => setDirty(false)}
+            />
 
             <SectionLibrary open={libraryOpen} onClose={() => setLibraryOpen(false)} types={sectionTypes} onPick={addSection} />
 
@@ -310,5 +383,24 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
                 confirmLabel={t('delete')}
             />
         </AdminLayout>
+        </MediaContext.Provider>
     );
+}
+
+function readPreference(key: string, fallback: boolean): boolean {
+    try {
+        const stored = window.localStorage.getItem(key);
+
+        return stored === null ? fallback : stored === '1';
+    } catch {
+        return fallback;
+    }
+}
+
+function writePreference(key: string, value: boolean): void {
+    try {
+        window.localStorage.setItem(key, value ? '1' : '0');
+    } catch {
+        // Private mode or blocked storage: the preference just isn't remembered.
+    }
 }

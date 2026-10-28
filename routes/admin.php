@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use PiShift\Content\Http\Controllers\Admin\AuthController;
+use PiShift\Content\Http\Controllers\Admin\GlobalController;
 use PiShift\Content\Http\Controllers\Admin\LocaleController;
+use PiShift\Content\Http\Controllers\Admin\MediaController;
 use PiShift\Content\Http\Controllers\Admin\PageController;
 use PiShift\Content\Http\Middleware\Authenticate;
 use PiShift\Content\Http\Middleware\HandleAdminRequests;
@@ -25,5 +27,19 @@ Route::middleware([...config('content.admin.middleware', ['web']), SetAdminLocal
             Route::get('pages/{page}', [PageController::class, 'edit'])->name('pages.edit');
             Route::put('pages/{page}', [PageController::class, 'update'])->name('pages.update');
             Route::delete('pages/{page}', [PageController::class, 'destroy'])->name('pages.destroy');
+            Route::post('pages/{page}/preview', [PageController::class, 'preview'])->name('pages.preview');
+            Route::get('pages/{page}/revisions', [PageController::class, 'revisions'])->name('pages.revisions');
+            Route::post('pages/{page}/revisions/{revision}/restore', [PageController::class, 'restore'])->name('pages.restore');
+
+            Route::get('media', [MediaController::class, 'index'])->name('media.index');
+            Route::get('media/list', [MediaController::class, 'list'])->name('media.list');
+            Route::post('media', [MediaController::class, 'store'])->name('media.store');
+            Route::get('media/{media}', [MediaController::class, 'show'])->name('media.show');
+            Route::put('media/{media}', [MediaController::class, 'update'])->name('media.update');
+            Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+
+            Route::get('globals', [GlobalController::class, 'index'])->name('globals.index');
+            Route::get('globals/{key}', [GlobalController::class, 'edit'])->name('globals.edit');
+            Route::put('globals/{key}', [GlobalController::class, 'update'])->name('globals.update');
         });
     });

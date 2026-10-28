@@ -4,6 +4,7 @@ import { cn, localeDir, missingTranslation, useT } from '../../lib/utils';
 import { FieldWrapper, SelectInput, Switch, TextArea, TextInput } from '../ui/Form';
 import { LinkField } from './LinkField';
 import { MediaField } from './MediaField';
+import { RichTextField } from './RichTextField';
 import { RepeaterField } from './RepeaterField';
 
 export interface FieldProps {
@@ -21,9 +22,16 @@ export interface FieldProps {
  * Picks the input for a field schema sent by the server.
  */
 export function FieldRenderer(props: FieldProps) {
-    const { field } = props;
+    // data-field-path lets the live preview jump to a field.
+    return (
+        <div data-field-path={props.path} className="min-w-0 scroll-mt-24">
+            <FieldInput {...props} />
+        </div>
+    );
+}
 
-    switch (field.type) {
+function FieldInput(props: FieldProps) {
+    switch (props.field.type) {
         case 'repeater':
             return <RepeaterField {...props} />;
         case 'link':
@@ -33,6 +41,8 @@ export function FieldRenderer(props: FieldProps) {
             return <MediaField {...props} />;
         case 'toggle':
             return <ToggleField {...props} />;
+        case 'rich-text':
+            return <RichTextField {...props} />;
         default:
             return <ScalarField {...props} />;
     }

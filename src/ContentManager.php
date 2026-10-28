@@ -93,6 +93,21 @@ class ContentManager
     }
 
     /**
+     * A page rendered from an unsaved document (the editor's live preview). Not validated:
+     * fields resolve whatever they are given.
+     *
+     * @param  array<string, mixed>  $document
+     */
+    public function resolveDocument(Page $page, array $document): ResolvedPage
+    {
+        request()->attributes->set(self::PREVIEW_ATTRIBUTE, true);
+
+        $normalized = PageDocument::fromArray($document)->normalize($this->sections);
+
+        return new ResolvedPage($page, $normalized, $this->sections, $this->localizer(), true);
+    }
+
+    /**
      * Normalize, validate and store a page draft.
      *
      * @param  array<string, mixed>  $document

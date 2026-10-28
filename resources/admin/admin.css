@@ -60,3 +60,43 @@
         transition-duration: 0.01ms !important;
     }
 }
+
+/* Rich text inside the admin editor. */
+@layer components {
+    .content-prose {
+        @apply text-[15px] leading-relaxed text-ink;
+    }
+
+    .content-prose > * + * {
+        @apply mt-2.5;
+    }
+
+    .content-prose h2 {
+        @apply text-lg font-semibold;
+    }
+
+    .content-prose h3 {
+        @apply text-base font-semibold;
+    }
+
+    .content-prose ul {
+        @apply list-disc ps-5;
+    }
+
+    .content-prose ol {
+        @apply list-decimal ps-5;
+    }
+
+    .content-prose blockquote {
+        @apply border-s-4 border-line-strong ps-3 text-ink-soft;
+    }
+
+    .content-prose a {
+        @apply text-accent underline;
+    }
+
+    .content-prose p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        @apply pointer-events-none float-start h-0 text-ink-faint;
+    }
+}

@@ -36,6 +36,22 @@ class ContentServiceProvider extends ServiceProvider
             ability: 'content.manage',
             active: 'content.admin.pages.*',
             sort: 10,
+        )->add(
+            key: 'globals',
+            label: 'content::admin.globals',
+            url: fn (): string => route('content.admin.globals.index'),
+            icon: 'settings',
+            ability: 'content.manage',
+            active: 'content.admin.globals.*',
+            sort: 20,
+        )->add(
+            key: 'media',
+            label: 'content::admin.media',
+            url: fn (): string => route('content.admin.media.index'),
+            icon: 'image',
+            ability: 'content.manage',
+            active: 'content.admin.media.*',
+            sort: 30,
         ));
     }
 
