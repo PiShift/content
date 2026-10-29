@@ -10,6 +10,8 @@ use PiShift\Content\Admin\Navigation;
 use PiShift\Content\Collections\CollectionRegistry;
 use PiShift\Content\Collections\CollectionType;
 use PiShift\Content\Console\DoctorCommand;
+use PiShift\Content\Console\ExportCommand;
+use PiShift\Content\Console\ImportCommand;
 use PiShift\Content\Console\MakeSectionCommand;
 use PiShift\Content\Console\TypesCommand;
 use PiShift\Content\Console\UpgradeCommand;
@@ -121,7 +123,7 @@ class ContentServiceProvider extends ServiceProvider
             $this->publishes([__DIR__.'/../stubs' => base_path('stubs/content')], 'content-stubs');
             $this->publishes([__DIR__.'/../dist' => public_path('vendor/content')], ['content-assets', 'laravel-assets']);
 
-            $this->commands([MakeSectionCommand::class, DoctorCommand::class, UpgradeCommand::class, TypesCommand::class]);
+            $this->commands([MakeSectionCommand::class, DoctorCommand::class, UpgradeCommand::class, TypesCommand::class, ExportCommand::class, ImportCommand::class]);
         }
     }
 }

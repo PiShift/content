@@ -169,6 +169,8 @@ createContentAdmin({ pages: import.meta.glob('./pages/**/*.tsx') });   // Inerti
 | `content:doctor [--render]` | Checks types (duplicate fields, missing views), templates, stored pages and globals against the current schemas, the published admin assets, and with `--render` requests every published page. Exits non-zero on errors: run it in CI and after every update. |
 | `content:upgrade [--dry-run]` | Writes content saved by older type versions back at the current version. |
 | `content:types [--path=]` | TypeScript types of what each section, global and collection gives its view. |
+| `content:export [--path=database/content]` | Writes pages, globals, collection entries and media (with their files) to a folder that ships with the release. |
+| `content:import [--path=database/content] [--force]` | Reads that folder on the server. What the site already has is kept unless `--force`, so it is safe on every deploy. |
 
 ## Compatibility rules
 
