@@ -15,6 +15,7 @@ use PiShift\Content\Console\ImportCommand;
 use PiShift\Content\Console\MakeSectionCommand;
 use PiShift\Content\Console\TypesCommand;
 use PiShift\Content\Console\UpgradeCommand;
+use PiShift\Content\Console\UserCommand;
 use PiShift\Content\Globals\GlobalRegistry;
 use PiShift\Content\Sections\SectionRegistry;
 
@@ -123,7 +124,7 @@ class ContentServiceProvider extends ServiceProvider
             $this->publishes([__DIR__.'/../stubs' => base_path('stubs/content')], 'content-stubs');
             $this->publishes([__DIR__.'/../dist' => public_path('vendor/content')], ['content-assets', 'laravel-assets']);
 
-            $this->commands([MakeSectionCommand::class, DoctorCommand::class, UpgradeCommand::class, TypesCommand::class, ExportCommand::class, ImportCommand::class]);
+            $this->commands([MakeSectionCommand::class, DoctorCommand::class, UpgradeCommand::class, TypesCommand::class, ExportCommand::class, ImportCommand::class, UserCommand::class]);
         }
     }
 }
