@@ -1,0 +1,232 @@
+{
+  "_AdminLayout-CX38HjvI.js": {
+    "file": "assets/AdminLayout-CX38HjvI.js",
+    "name": "AdminLayout",
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js"
+    ]
+  },
+  "_Badge-DjXmX6FC.js": {
+    "file": "assets/Badge-DjXmX6FC.js",
+    "name": "Badge",
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js"
+    ]
+  },
+  "_Button-BpLss5wZ.js": {
+    "file": "assets/Button-BpLss5wZ.js",
+    "name": "Button",
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js"
+    ]
+  },
+  "_CellValue-O_y4WHNx.js": {
+    "file": "assets/CellValue-O_y4WHNx.js",
+    "name": "CellValue",
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Badge-DjXmX6FC.js"
+    ]
+  },
+  "_FieldRenderer-Cj6ip2xB.js": {
+    "file": "assets/FieldRenderer-Cj6ip2xB.js",
+    "name": "FieldRenderer",
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js",
+      "_MediaPicker-BsiR-5AA.js"
+    ]
+  },
+  "_Form-Da_E-QD4.js": {
+    "file": "assets/Form-Da_E-QD4.js",
+    "name": "Form",
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js"
+    ]
+  },
+  "_Icon-Nd-7Q7VT.js": {
+    "file": "assets/Icon-Nd-7Q7VT.js",
+    "name": "Icon",
+    "imports": [
+      "resources/admin/standalone.tsx"
+    ]
+  },
+  "_MediaPicker-BsiR-5AA.js": {
+    "file": "assets/MediaPicker-BsiR-5AA.js",
+    "name": "MediaPicker",
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js",
+      "_Modal-C5FnWiJg.js"
+    ]
+  },
+  "_Modal-C5FnWiJg.js": {
+    "file": "assets/Modal-C5FnWiJg.js",
+    "name": "Modal",
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js"
+    ]
+  },
+  "resources/admin/pages/Auth/Login.tsx": {
+    "file": "assets/Login-CYxfHupW.js",
+    "name": "Login",
+    "src": "resources/admin/pages/Auth/Login.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js"
+    ]
+  },
+  "resources/admin/pages/Collections/Form.tsx": {
+    "file": "assets/Form-Dt3rbBSo.js",
+    "name": "Form",
+    "src": "resources/admin/pages/Collections/Form.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js",
+      "_FieldRenderer-Cj6ip2xB.js",
+      "_MediaPicker-BsiR-5AA.js",
+      "_Modal-C5FnWiJg.js",
+      "_Badge-DjXmX6FC.js",
+      "_AdminLayout-CX38HjvI.js"
+    ]
+  },
+  "resources/admin/pages/Collections/Index.tsx": {
+    "file": "assets/Index-BTXNKnHQ.js",
+    "name": "Index",
+    "src": "resources/admin/pages/Collections/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js",
+      "_AdminLayout-CX38HjvI.js",
+      "_CellValue-O_y4WHNx.js"
+    ]
+  },
+  "resources/admin/pages/Dashboard.tsx": {
+    "file": "assets/Dashboard-E4EfrO8w.js",
+    "name": "Dashboard",
+    "src": "resources/admin/pages/Dashboard.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_AdminLayout-CX38HjvI.js",
+      "_CellValue-O_y4WHNx.js"
+    ]
+  },
+  "resources/admin/pages/Globals/Edit.tsx": {
+    "file": "assets/Edit-CfEwo-2K.js",
+    "name": "Edit",
+    "src": "resources/admin/pages/Globals/Edit.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js",
+      "_FieldRenderer-Cj6ip2xB.js",
+      "_MediaPicker-BsiR-5AA.js",
+      "_Badge-DjXmX6FC.js",
+      "_AdminLayout-CX38HjvI.js"
+    ]
+  },
+  "resources/admin/pages/Globals/Index.tsx": {
+    "file": "assets/Index-BH8A_qdk.js",
+    "name": "Index",
+    "src": "resources/admin/pages/Globals/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Badge-DjXmX6FC.js",
+      "_AdminLayout-CX38HjvI.js"
+    ]
+  },
+  "resources/admin/pages/Media/Index.tsx": {
+    "file": "assets/Index-D-0tl5zl.js",
+    "name": "Index",
+    "src": "resources/admin/pages/Media/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js",
+      "_MediaPicker-BsiR-5AA.js",
+      "_Modal-C5FnWiJg.js",
+      "_AdminLayout-CX38HjvI.js"
+    ]
+  },
+  "resources/admin/pages/Pages/Edit.tsx": {
+    "file": "assets/Edit-DrYBvWrb.js",
+    "name": "Edit",
+    "src": "resources/admin/pages/Pages/Edit.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js",
+      "_FieldRenderer-Cj6ip2xB.js",
+      "_MediaPicker-BsiR-5AA.js",
+      "_Modal-C5FnWiJg.js",
+      "_Badge-DjXmX6FC.js",
+      "_AdminLayout-CX38HjvI.js"
+    ]
+  },
+  "resources/admin/pages/Pages/Index.tsx": {
+    "file": "assets/Index-CEijm3Am.js",
+    "name": "Index",
+    "src": "resources/admin/pages/Pages/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/admin/standalone.tsx",
+      "_Icon-Nd-7Q7VT.js",
+      "_Button-BpLss5wZ.js",
+      "_Form-Da_E-QD4.js",
+      "_Modal-C5FnWiJg.js",
+      "_Badge-DjXmX6FC.js",
+      "_AdminLayout-CX38HjvI.js"
+    ]
+  },
+  "resources/admin/standalone.tsx": {
+    "file": "assets/standalone-DKdSdLJ_.js",
+    "name": "standalone",
+    "src": "resources/admin/standalone.tsx",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/admin/pages/Auth/Login.tsx",
+      "resources/admin/pages/Collections/Form.tsx",
+      "resources/admin/pages/Collections/Index.tsx",
+      "resources/admin/pages/Dashboard.tsx",
+      "resources/admin/pages/Globals/Edit.tsx",
+      "resources/admin/pages/Globals/Index.tsx",
+      "resources/admin/pages/Media/Index.tsx",
+      "resources/admin/pages/Pages/Edit.tsx",
+      "resources/admin/pages/Pages/Index.tsx"
+    ],
+    "css": [
+      "assets/standalone-S9nIFWUw.css"
+    ]
+  }
+}
