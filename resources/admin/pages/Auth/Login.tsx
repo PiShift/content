@@ -28,7 +28,7 @@ export default function Login({ loginUrl }: { loginUrl: string }) {
                 <div className="mb-6 flex flex-col items-center gap-3 text-center">
                     <BrandMark size="lg" />
                     <div>
-                        <p className="text-sm font-semibold text-ink-soft">{admin.name}</p>
+                        {!admin.logo && <p className="text-sm font-semibold text-ink-soft">{admin.name}</p>}
                         <h1 className="mt-1 text-xl font-semibold text-balance">{t('login_title')}</h1>
                     </div>
                 </div>
