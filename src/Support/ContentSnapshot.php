@@ -24,9 +24,10 @@ class ContentSnapshot
     public const FILE = 'content.json';
 
     /**
+     * @param  list<string>  $except  Items to leave out: "page:{key}", "global:{key}" or "collection:{key}".
      * @return array{pages: int, globals: int, entries: int, media: int}
      */
-    public function export(string $directory): array
+    public function export(string $directory, array $except = []): array
     {
         $media = Media::query()->orderBy('id')->get();
 
@@ -44,14 +45,17 @@ class ContentSnapshot
         $snapshot = [
             'version' => 1,
             'pages' => Page::query()->orderBy('position')->orderBy('key')->get()
+                ->reject(fn (Page $page): bool => in_array("page:{$page->key}", $except, true))
                 ->map(fn (Page $page): array => $page->only(['key', 'title', 'slug', 'template', 'draft', 'published', 'seo', 'status', 'position']) + ['published_at' => $page->published_at?->toIso8601String()])
-                ->all(),
+                ->values()->all(),
             'globals' => GlobalSet::query()->orderBy('key')->get()
+                ->reject(fn (GlobalSet $global): bool => in_array("global:{$global->key}", $except, true))
                 ->map(fn (GlobalSet $global): array => $global->only(['key', 'draft', 'published']) + ['published_at' => $global->published_at?->toIso8601String()])
-                ->all(),
+                ->values()->all(),
             'entries' => Entry::query()->orderBy('collection')->orderBy('id')->get()
+                ->reject(fn (Entry $entry): bool => in_array("collection:{$entry->collection}", $except, true))
                 ->map(fn (Entry $entry): array => $entry->only(['collection', 'data', 'position']))
-                ->all(),
+                ->values()->all(),
             'media' => $media->map(fn (Media $item): array => $item->only(['id', 'disk', 'path', 'name', 'mime', 'size', 'width', 'height', 'alt']))->all(),
         ];
 

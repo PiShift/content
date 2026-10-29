@@ -126,7 +126,16 @@ export function RepeaterField({ field, value, onChange, locale, path, errors }: 
 }
 
 function itemTitle(item: Item, field: FieldSchema, subFields: FieldSchema[], locale: string): string {
-    const labelField = field.itemLabel ?? subFields.find((sub) => ['text', 'textarea'].includes(sub.type))?.name;
+    const labelField = field.itemLabel ?? subFields.find((sub) => ['text', 'textarea', 'link'].includes(sub.type))?.name;
 
-    return labelField ? stripHtml(pickText(item[labelField], locale)).slice(0, 80) : '';
+    if (!labelField) {
+        return '';
+    }
+
+    const value = item[labelField];
+    // A link shows its text, or its URL when it has none.
+    const isLink = !!value && typeof value === 'object' && 'url' in value;
+    const text = isLink ? pickText((value as { label?: unknown }).label, locale) || String((value as { url?: unknown }).url ?? '') : pickText(value, locale);
+
+    return stripHtml(text).slice(0, 80);
 }
