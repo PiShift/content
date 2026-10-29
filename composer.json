@@ -2,7 +2,7 @@
     "name": "pishift/content",
     "description": "Content engine for Laravel sites: structure in code, content in the database, rendering with the site's own components.",
     "type": "library",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^8.3",
         "illuminate/support": "^12.0|^13.0",

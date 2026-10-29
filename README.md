@@ -241,3 +241,7 @@ git tag v1.x.y && git push --tags
 `dist/` is committed in the package repository so Composer installs a ready admin. Packagist
 picks up the new tag; check it is listed on https://packagist.org/packages/pishift/content
 before updating sites.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
