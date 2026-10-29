@@ -213,7 +213,7 @@ composer install
 composer test
 ```
 
-GitHub Actions runs it on PHP 8.3 and 8.4 for every push and pull request.
+GitHub Actions runs it on PHP 8.3 and 8.4 with Laravel 12 and 13 for every push and pull request.
 
 ## Releasing
 
