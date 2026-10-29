@@ -15,7 +15,7 @@ class ExportCommand extends Command
 {
     protected $signature = 'content:export
         {--path=database/content : Folder to write content.json and the media files to}
-        {--except=* : Leave out an item, e.g. --except=global:site (also page:{key}, collection:{key})}';
+        {--except=* : Leave out an item: global:site, page:about or collection:faq}';
 
     protected $description = 'Export pages, globals, collection entries and media to a folder';
 
