@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use PiShift\Content\Facades\Content;
 use PiShift\Content\Fields\Field;
 use PiShift\Content\Models\Page;
 use PiShift\Content\Sections\SectionType;
+use PiShift\Content\Tests\Fixtures\User;
 
 /**
  * A page stored as-is (no normalizing or validation), like content saved by an older version.
@@ -129,5 +131,38 @@ describe('prebuilt admin', function () {
         $this->artisan('content:doctor')
             ->expectsOutputToContain('vendor:publish --tag=content-assets')
             ->assertFailed();
+    });
+});
+
+describe('content:user', function () {
+    it('creates the first admin user, who can then sign in', function () {
+        $this->artisan('content:user', ['email' => 'admin@example.com'])
+            ->expectsQuestion('Password (at least 8 characters)', 'long-enough-password')
+            ->expectsOutputToContain('User admin@example.com created.')
+            ->assertSuccessful();
+
+        $user = User::where('email', 'admin@example.com')->firstOrFail();
+        expect($user->name)->toBe('admin');
+
+        $this->post('/admin/login', ['email' => 'admin@example.com', 'password' => 'long-enough-password'])->assertRedirect(route('content.admin.home'));
+        $this->assertAuthenticatedAs($user);
+    });
+
+    it('sets the password of an existing user and keeps their name', function () {
+        $user = User::factory()->create(['email' => 'editor@example.com', 'name' => 'Mariem']);
+
+        $this->artisan('content:user', ['email' => 'editor@example.com', '--password' => 'new-password-123'])
+            ->expectsOutputToContain('Password of editor@example.com updated.')
+            ->assertSuccessful();
+
+        expect($user->fresh()->name)->toBe('Mariem')
+            ->and(Hash::check('new-password-123', $user->fresh()->password))->toBeTrue()
+            ->and(User::count())->toBe(1);
+    });
+
+    it('refuses an invalid email or a short password', function () {
+        $this->artisan('content:user', ['email' => 'not-an-email', '--password' => 'short'])->assertFailed();
+
+        expect(User::count())->toBe(0);
     });
 });

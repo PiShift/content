@@ -29,7 +29,8 @@ php artisan vendor:publish --tag=content-config
 php artisan vendor:publish --tag=content-assets
 ```
 
-Open `/admin` and sign in with a user of the `web` guard. Abilities decide what each user sees:
+Open `/admin` and sign in with a user of the `web` guard. A new site creates its first one with
+`php artisan content:user admin@example.com` (asks for the password). Abilities decide what each user sees:
 
 ```php
 // AppServiceProvider::boot()
@@ -166,6 +167,7 @@ createContentAdmin({ pages: import.meta.glob('./pages/**/*.tsx') });   // Inerti
 | Command | What it does |
 | --- | --- |
 | `content:make-section Name` | Section class and view from the stubs. |
+| `content:user email [--name=] [--password=]` | Creates an admin user, or sets the password of an existing one. |
 | `content:doctor [--render]` | Checks types (duplicate fields, missing views), templates, stored pages and globals against the current schemas, the published admin assets, and with `--render` requests every published page. Exits non-zero on errors: run it in CI and after every update. |
 | `content:upgrade [--dry-run]` | Writes content saved by older type versions back at the current version. |
 | `content:types [--path=]` | TypeScript types of what each section, global and collection gives its view. |
