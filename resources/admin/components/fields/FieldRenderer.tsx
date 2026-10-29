@@ -6,6 +6,7 @@ import { LinkField } from './LinkField';
 import { MediaField } from './MediaField';
 import { RichTextField } from './RichTextField';
 import { RepeaterField } from './RepeaterField';
+import { SlugField } from './SlugField';
 import { ReadonlyField } from './ReadonlyField';
 import { UploadField } from './UploadField';
 
@@ -43,6 +44,10 @@ export function FieldRenderer(props: FieldProps) {
 function FieldInput(props: FieldProps) {
     if (props.field.readonly) {
         return <ReadonlyField {...props} />;
+    }
+
+    if (props.field.slugFrom) {
+        return <SlugField {...props} />;
     }
 
     switch (props.field.type) {

@@ -71,7 +71,7 @@ class CardsSection extends SectionType
 
 The view receives `$data` (values resolved for the current locale), `$variant`, `$classes` (from the style options, see `style_classes`), `$section` and whatever `with()` adds.
 
-Field types: `text` (`email()`, `password()`), `textarea`, `richText` (sanitized), `number`, `toggle`, `select`, `icon`, `date`, `dateTime`, `color`, `link`, `image`, `file` (media library), `upload` (straight to a disk), `repeater`. Common options: `translatable()`, `required()`, `default()`, `help()`, `rules([...])`, `visibleWhen('field', 'value')`, `readonly()`.
+Field types: `text` (`email()`, `password()`, `slug('title')` — filled from the title while new, then locked with an edit button), `textarea`, `richText` (sanitized), `number`, `toggle`, `select`, `icon`, `date`, `dateTime`, `color`, `link`, `image`, `file` (media library), `upload` (straight to a disk), `repeater`. Common options: `translatable()`, `required()`, `default()`, `help()`, `rules([...])`, `visibleWhen('field', 'value')`, `readonly()`.
 
 ### Changing a section later
 

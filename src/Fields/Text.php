@@ -11,6 +11,8 @@ class Text extends Field
     /** @var 'text'|'email'|'password' */
     protected string $inputType = 'text';
 
+    protected ?string $slugFrom = null;
+
     public function maxLength(int $maxLength): static
     {
         $this->maxLength = $maxLength;
@@ -42,6 +44,17 @@ class Text extends Field
         return $this;
     }
 
+    /**
+     * A URL slug filled from a sibling field (e.g. the title) while the record is new; the
+     * editor can unlock it and type their own.
+     */
+    public function slug(string $from = 'title'): static
+    {
+        $this->slugFrom = $from;
+
+        return $this->rules(['regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/']);
+    }
+
     public function isPassword(): bool
     {
         return $this->inputType === 'password';
@@ -59,6 +72,6 @@ class Text extends Field
 
     protected function extraSchema(): array
     {
-        return ['maxLength' => $this->maxLength, 'placeholder' => $this->placeholder, 'inputType' => $this->inputType];
+        return ['maxLength' => $this->maxLength, 'placeholder' => $this->placeholder, 'inputType' => $this->inputType, 'slugFrom' => $this->slugFrom];
     }
 }

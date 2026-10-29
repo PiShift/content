@@ -49,6 +49,7 @@ const PATHS: Record<string, string> = {
     news: 'M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5',
     steps: 'M4 18h5v-5h5V8h6',
     undo: 'M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-4',
+    pencil: 'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4',
 };
 
 export function Icon({ name, size = 18, ...props }: { name: string; size?: number } & SVGProps<SVGSVGElement>) {

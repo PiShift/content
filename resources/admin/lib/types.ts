@@ -23,6 +23,8 @@ export interface FieldSchema {
     storesPath?: boolean;
     readonly?: boolean;
     inputType?: 'text' | 'email' | 'password';
+    /** Sibling field a slug is generated from. */
+    slugFrom?: string | null;
     maxSize?: number;
 }
 
