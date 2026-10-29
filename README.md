@@ -15,12 +15,7 @@ Requires PHP 8.3+, Laravel 12 or 13, `inertiajs/inertia-laravel` 3.
 
 ## Install
 
-Until the package is on Packagist, add the private repository to the project's `composer.json`
-and give Composer a GitHub token that can read it (`composer config --global github-oauth.github.com <token>`):
-
-```json
-"repositories": [{ "type": "vcs", "url": "https://github.com/PiShift/content" }]
-```
+From [Packagist](https://packagist.org/packages/pishift/content):
 
 ```bash
 composer require pishift/content
@@ -144,6 +139,23 @@ $this->app->afterResolving(Navigation::class, fn (Navigation $navigation) => $na
 
 Widget types: `stats`, `chart` (line), `table`.
 
+## Admin colour and logo
+
+The admin uses the package's green and the first letter of `content.admin.name` until the
+project sets its own look in `config/content.php` (or `.env`):
+
+```php
+'admin' => [
+    'brand' => [
+        'accent' => '#0A1F5C',          // CONTENT_ADMIN_ACCENT; hover and light shades are derived
+        'logo' => '/images/logo.png',   // CONTENT_ADMIN_LOGO; URL or path in public/
+    ],
+],
+```
+
+The colour is applied when the page loads, so the prebuilt admin needs no rebuild. Only
+`#rrggbb` values are used; anything else is ignored.
+
 ## Admin assets
 
 `content.admin.assets`:
@@ -226,4 +238,6 @@ git add dist && git commit -m "Build admin"
 git tag v1.x.y && git push --tags
 ```
 
-`dist/` is committed in the package repository so Composer installs a ready admin.
+`dist/` is committed in the package repository so Composer installs a ready admin. Packagist
+picks up the new tag; check it is listed on https://packagist.org/packages/pishift/content
+before updating sites.

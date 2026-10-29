@@ -100,6 +100,8 @@ export interface NavItem {
 export interface SharedProps {
     admin: {
         name: string;
+        /** Project logo URL (config content.admin.brand.logo), or null for the name's first letter. */
+        logo: string | null;
         locale: string;
         dir: 'rtl' | 'ltr';
         locales: string[];

@@ -1,4 +1,5 @@
 @php($adminLocale = app()->getLocale())
+@php($brandCss = app(\PiShift\Content\Support\AdminBrand::class)->css())
 <!DOCTYPE html>
 <html lang="{{ $adminLocale }}" dir="{{ $adminLocale === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
@@ -14,6 +15,9 @@
     @else
         @viteReactRefresh
         @vite(config('content.admin.vite'))
+    @endif
+    @if ($brandCss !== '')
+        <style>{!! $brandCss !!}</style>
     @endif
     <x-inertia::head>
         <title>{{ config('content.admin.name') }}</title>
