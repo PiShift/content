@@ -5,6 +5,7 @@ namespace PiShift\Content\Http\Middleware;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use PiShift\Content\Admin\Navigation;
+use PiShift\Content\Support\AdminBrand;
 
 /**
  * Inertia middleware of the admin only: the public site keeps its own Blade rendering.
@@ -27,6 +28,7 @@ class HandleAdminRequests extends Middleware
             ...parent::share($request),
             'admin' => [
                 'name' => config('content.admin.name'),
+                'logo' => app(AdminBrand::class)->logo(),
                 'locale' => $locale,
                 'dir' => $locale === 'ar' ? 'rtl' : 'ltr',
                 'locales' => config('content.admin.locales', ['ar', 'fr']),

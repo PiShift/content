@@ -1,5 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useEffect, useState, type ReactNode } from 'react';
+import { BrandMark } from '../components/ui/BrandMark';
 import { Icon } from '../components/ui/Icon';
 import { Toasts } from '../components/ui/Toasts';
 import { cn, LOCALE_NAMES, useShared, useT } from '../lib/utils';
@@ -39,9 +40,7 @@ export function AdminLayout({ title, actions, children, wide = false }: { title:
                 )}
             >
                 <div className="flex h-16 items-center gap-3 border-b border-line px-5">
-                    <span className="grid size-8 place-items-center rounded-control bg-accent text-sm font-bold text-on-accent">
-                        {admin.name.trim().charAt(0)}
-                    </span>
+                    <BrandMark size="sm" />
                     <span className="truncate text-sm leading-tight font-semibold">{admin.name}</span>
                 </div>
 

@@ -107,6 +107,14 @@ return [
         'assets' => env('CONTENT_ADMIN_ASSETS', 'prebuilt'),
         'vite' => ['resources/admin/app.tsx'],
         'middleware' => ['web'],
+
+        // The project's look in the admin: an accent colour (#rrggbb; hover and light shades
+        // are derived from it) and a logo (URL or path in public/), shown on the login page
+        // and in the sidebar. Without them: the package's green and the site name's first letter.
+        'brand' => [
+            'accent' => env('CONTENT_ADMIN_ACCENT'),
+            'logo' => env('CONTENT_ADMIN_LOGO'),
+        ],
     ],
 
     // Pages the application's own routes depend on: they can't be deleted from the admin.

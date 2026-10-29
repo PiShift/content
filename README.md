@@ -144,6 +144,23 @@ $this->app->afterResolving(Navigation::class, fn (Navigation $navigation) => $na
 
 Widget types: `stats`, `chart` (line), `table`.
 
+## Admin colour and logo
+
+The admin uses the package's green and the first letter of `content.admin.name` until the
+project sets its own look in `config/content.php` (or `.env`):
+
+```php
+'admin' => [
+    'brand' => [
+        'accent' => '#0A1F5C',          // CONTENT_ADMIN_ACCENT; hover and light shades are derived
+        'logo' => '/images/logo.png',   // CONTENT_ADMIN_LOGO; URL or path in public/
+    ],
+],
+```
+
+The colour is applied when the page loads, so the prebuilt admin needs no rebuild. Only
+`#rrggbb` values are used; anything else is ignored.
+
 ## Admin assets
 
 `content.admin.assets`:

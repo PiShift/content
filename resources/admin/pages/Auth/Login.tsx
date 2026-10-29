@@ -1,5 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { useEffect, type FormEvent } from 'react';
+import { BrandMark } from '../../components/ui/BrandMark';
 import { Button } from '../../components/ui/Button';
 import { FieldWrapper, TextInput } from '../../components/ui/Form';
 import { cn, LOCALE_NAMES, useShared, useT } from '../../lib/utils';
@@ -25,7 +26,7 @@ export default function Login({ loginUrl }: { loginUrl: string }) {
 
             <div className="w-full max-w-sm">
                 <div className="mb-6 flex flex-col items-center gap-3 text-center">
-                    <span className="grid size-11 place-items-center rounded-panel bg-accent text-lg font-bold text-on-accent">{admin.name.trim().charAt(0)}</span>
+                    <BrandMark size="lg" />
                     <div>
                         <p className="text-sm font-semibold text-ink-soft">{admin.name}</p>
                         <h1 className="mt-1 text-xl font-semibold text-balance">{t('login_title')}</h1>
