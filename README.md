@@ -203,9 +203,22 @@ php artisan content:upgrade --dry-run   # then without --dry-run
 php artisan content:doctor --render
 ```
 
+## Testing
+
+The package has its own suite (Pest + Orchestra Testbench): a bare Laravel app with fixture
+section types, a global, two collections (one on its own table) and a test layout.
+
+```bash
+composer install
+composer test
+```
+
+GitHub Actions runs it on PHP 8.3 and 8.4 for every push and pull request.
+
 ## Releasing
 
 ```bash
+composer test                  # must pass
 npm install && npm run build   # rebuilds dist/ (the prebuilt admin)
 git add dist && git commit -m "Build admin"
 git tag v1.x.y && git push --tags

@@ -8,6 +8,11 @@
         "illuminate/support": "^12.0|^13.0",
         "inertiajs/inertia-laravel": "^3.0"
     },
+    "require-dev": {
+        "orchestra/testbench": "^11.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0"
+    },
     "autoload": {
         "psr-4": {
             "PiShift\\Content\\": "src/"
@@ -15,6 +20,11 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PiShift\\Content\\Tests\\": "tests/"
+        }
     },
     "extra": {
         "laravel": {
@@ -24,6 +34,14 @@
             "aliases": {
                 "Content": "PiShift\\Content\\Facades\\Content"
             }
+        }
+    },
+    "scripts": {
+        "test": "pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     },
     "minimum-stability": "dev",
