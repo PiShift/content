@@ -15,12 +15,7 @@ Requires PHP 8.3+, Laravel 12 or 13, `inertiajs/inertia-laravel` 3.
 
 ## Install
 
-Until the package is on Packagist, add the private repository to the project's `composer.json`
-and give Composer a GitHub token that can read it (`composer config --global github-oauth.github.com <token>`):
-
-```json
-"repositories": [{ "type": "vcs", "url": "https://github.com/PiShift/content" }]
-```
+From [Packagist](https://packagist.org/packages/pishift/content):
 
 ```bash
 composer require pishift/content
@@ -243,4 +238,6 @@ git add dist && git commit -m "Build admin"
 git tag v1.x.y && git push --tags
 ```
 
-`dist/` is committed in the package repository so Composer installs a ready admin.
+`dist/` is committed in the package repository so Composer installs a ready admin. Packagist
+picks up the new tag; check it is listed on https://packagist.org/packages/pishift/content
+before updating sites.
