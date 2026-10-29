@@ -24,9 +24,13 @@ class Select extends Field
         return 'select';
     }
 
+    /**
+     * One of the options. Not "string": a value read back from an integer column (e.g. a parent
+     * id) is sent back as a number, and the in rule already compares as text.
+     */
     protected function valueRules(): array
     {
-        return ['string', Rule::in(array_map('strval', array_keys($this->options)))];
+        return [Rule::in(array_map('strval', array_keys($this->options)))];
     }
 
     protected function extraSchema(): array
