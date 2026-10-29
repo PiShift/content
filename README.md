@@ -15,6 +15,13 @@ Requires PHP 8.3+, Laravel 12 or 13, `inertiajs/inertia-laravel` 3.
 
 ## Install
 
+Until the package is on Packagist, add the private repository to the project's `composer.json`
+and give Composer a GitHub token that can read it (`composer config --global github-oauth.github.com <token>`):
+
+```json
+"repositories": [{ "type": "vcs", "url": "https://github.com/PiShift/content" }]
+```
+
 ```bash
 composer require pishift/content
 php artisan migrate
