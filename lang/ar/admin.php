@@ -115,6 +115,8 @@ return [
     'live_preview' => 'معاينة مباشرة',
     'show_preview' => 'إظهار المعاينة',
     'hide_preview' => 'إخفاء المعاينة',
+    'expand_preview' => 'ملء الشاشة',
+    'collapse_preview' => 'الخروج من ملء الشاشة',
     'preview_failed' => 'تعذّر عرض المعاينة.',
     'global_published' => 'تم نشر الإعدادات',
     'no_globals' => 'لا توجد إعدادات عامة لهذا الموقع.',

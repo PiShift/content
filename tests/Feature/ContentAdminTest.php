@@ -173,3 +173,11 @@ it('keeps the admin language separate from the public site language', function (
     $this->get('/admin/pages')->assertInertia(fn (Assert $page) => $page->where('admin.locale', 'fr')->where('admin.dir', 'ltr')->where('t.pages', 'Pages'));
     expect(session('locale'))->toBe('ar');
 });
+
+it('has every admin string in each admin language', function () {
+    $keys = fn (string $locale): array => array_keys(require __DIR__."/../../lang/{$locale}/admin.php");
+
+    expect($keys('ar'))->toContain('expand_preview', 'collapse_preview')
+        ->and($keys('fr'))->toEqualCanonicalizing($keys('ar'))
+        ->and($keys('en'))->toEqualCanonicalizing($keys('ar'));
+});

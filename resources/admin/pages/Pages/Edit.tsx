@@ -346,7 +346,7 @@ export default function PageEdit({ page, document: initialDocument, sectionTypes
                 </section>
 
                 {previewOpen && (
-                    <div className="lg:col-span-2 2xl:sticky 2xl:top-20 2xl:col-span-1 2xl:h-[calc(100dvh-6rem)]">
+                    <div className="h-[75vh] lg:col-span-2 2xl:sticky 2xl:top-20 2xl:col-span-1 2xl:h-[calc(100dvh-6rem)]">
                         <LivePreview url={urls.livePreview} document={liveDocument} locale={locale} onSelect={selectFromPreview} />
                     </div>
                 )}

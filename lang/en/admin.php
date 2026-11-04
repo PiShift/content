@@ -115,6 +115,8 @@ return [
     'live_preview' => 'Live preview',
     'show_preview' => 'Show preview',
     'hide_preview' => 'Hide preview',
+    'expand_preview' => 'Full screen',
+    'collapse_preview' => 'Exit full screen',
     'preview_failed' => 'The preview couldn’t be shown.',
     'global_published' => 'Settings published',
     'no_globals' => 'This site has no global settings.',

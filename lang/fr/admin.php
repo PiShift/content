@@ -115,6 +115,8 @@ return [
     'live_preview' => 'Aperçu en direct',
     'show_preview' => 'Afficher l’aperçu',
     'hide_preview' => 'Masquer l’aperçu',
+    'expand_preview' => 'Plein écran',
+    'collapse_preview' => 'Quitter le plein écran',
     'preview_failed' => 'L’aperçu n’a pas pu être affiché.',
     'global_published' => 'Réglages publiés',
     'no_globals' => 'Ce site n’a pas de réglages globaux.',
