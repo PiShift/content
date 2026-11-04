@@ -69,6 +69,14 @@ The view receives `$data` (values resolved for the current locale), `$variant`, 
 
 Field types: `text` (`email()`, `password()`, `slug('title')` — filled from the title while new, then locked with an edit button), `textarea`, `richText` (sanitized), `number`, `toggle`, `select`, `icon`, `date`, `dateTime`, `color`, `link`, `image`, `file` (media library), `upload` (straight to a disk), `repeater`. Common options: `translatable()`, `required()`, `default()`, `help()`, `rules([...])`, `visibleWhen('field', 'value')`, `readonly()`.
 
+For a select over many records (hundreds of students…), search them on the server instead of listing them all:
+
+```php
+Field::select('student_id')->fromModel(Student::class, 'full_name', ['full_name', 'national_id'])
+```
+
+The admin shows a search box that loads 20 options at a time, the chosen label appears in forms, read-only fields and list columns, and unknown values are rejected. `remote($search, $labels)` takes your own callbacks when the options don't come from one model.
+
 ### Changing a section later
 
 Stored content is kept as it was saved. When fields change shape, raise `version()` and convert old data in `upgrade()`; it runs every time old content is read:

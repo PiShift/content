@@ -20,7 +20,13 @@ class ArticlesCollection extends CollectionType
             Field::date('deadline')->visibleWhen('kind', 'tender')->required(),
             Field::select('status')->options(['draft' => 'Draft', 'published' => 'Published']),
             Field::number('views')->readonly(),
+            Field::select('author_id')->fromModel(User::class, 'name', ['name', 'email'], perPage: 2)->label('Author'),
         ];
+    }
+
+    public function columns(): array
+    {
+        return ['title' => 'Title', 'kind' => 'Kind', 'status' => 'Status', 'author_id' => 'Author'];
     }
 
     public function driver(): CollectionDriver

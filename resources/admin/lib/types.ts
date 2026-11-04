@@ -12,6 +12,9 @@ export interface FieldSchema {
     placeholder?: string | null;
     rows?: number;
     options?: Record<string, string>;
+    /** Options searched on the server, page by page (see Select::remote()). */
+    remote?: boolean;
+    optionsUrl?: string;
     min?: number | null;
     max?: number | null;
     integer?: boolean;
