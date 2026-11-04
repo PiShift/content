@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class Article extends Model
 {
-    protected $fillable = ['title', 'slug', 'kind', 'deadline', 'status', 'views'];
+    protected $fillable = ['title', 'slug', 'kind', 'deadline', 'status', 'views', 'author_id'];
 
     protected function casts(): array
     {
@@ -28,6 +28,7 @@ class Article extends Model
             $table->date('deadline')->nullable();
             $table->string('status')->default('draft');
             $table->unsignedInteger('views')->default(0);
+            $table->foreignId('author_id')->nullable();
             $table->timestamps();
         });
     }

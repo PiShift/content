@@ -112,3 +112,54 @@ it('refuses users without the collection ability and unknown collections', funct
     Gate::define('content.manage', fn () => false);
     $this->get('/admin/collections/articles')->assertForbidden();
 });
+
+describe('remote select', function () {
+    beforeEach(function () {
+        User::query()->delete();
+        $this->authors = collect(['Aïcha Ba', 'Brahim Diallo', 'Cheikh Fall', 'Dah Sidi'])
+            ->map(fn (string $name, int $index) => User::factory()->create(['name' => $name, 'email' => "author{$index}@example.com"]));
+        $this->actingAs($this->authors->first());
+    });
+
+    it('searches the options on the server, a page at a time', function () {
+        $url = '/admin/collections/articles/fields/author_id/options';
+
+        $this->getJson($url)->assertOk()->assertJson([
+            'options' => [['label' => 'Aïcha Ba'], ['label' => 'Brahim Diallo']],
+            'more' => true,
+        ]);
+        $this->getJson("{$url}?page=2")->assertJson(['options' => [['label' => 'Cheikh Fall'], ['label' => 'Dah Sidi']], 'more' => false]);
+        $this->getJson("{$url}?search=fall")->assertJsonCount(1, 'options')->assertJsonPath('options.0.value', (string) $this->authors[2]->id);
+        $this->getJson("{$url}?search=author3@")->assertJsonPath('options.0.label', 'Dah Sidi');
+        $this->getJson("{$url}?search=100%25")->assertJsonCount(0, 'options');
+
+        $this->getJson('/admin/collections/articles/fields/nope/options')->assertNotFound();
+        $this->getJson('/admin/collections/articles/fields/title/options')->assertNotFound();
+    });
+
+    it('sends the chosen label with the form and shows it in the list', function () {
+        $article = Article::create(['title' => ['ar' => 'أ'], 'slug' => 'avec-auteur', 'author_id' => $this->authors[2]->id]);
+
+        $this->get("/admin/collections/articles/{$article->id}")->assertInertia(fn (Assert $page) => $page
+            ->where('collection.fields.6.remote', true)
+            ->where('collection.fields.6.options', [(string) $this->authors[2]->id => 'Cheikh Fall'])
+            ->where('collection.fields.6.optionsUrl', url('/admin/collections/articles/fields/author_id/options')));
+
+        $this->get('/admin/collections/articles/create')->assertInertia(fn (Assert $page) => $page->where('collection.fields.6.options', []));
+
+        $this->get('/admin/collections/articles')->assertInertia(fn (Assert $page) => $page->where('records.data.0.cells.author_id.value', 'Cheikh Fall'));
+    });
+
+    it('accepts known values only', function () {
+        $this->post('/admin/collections/articles', ['data' => articleData(['author_id' => 999])])->assertSessionHasErrors('data.author_id');
+        $this->post('/admin/collections/articles', ['data' => articleData(['author_id' => $this->authors[1]->id])])->assertSessionHasNoErrors();
+
+        expect(Article::sole()->author_id)->toBe($this->authors[1]->id);
+    });
+
+    it('refuses users without the collection ability', function () {
+        Gate::define('content.manage', fn () => false);
+
+        $this->getJson('/admin/collections/articles/fields/author_id/options')->assertForbidden();
+    });
+});

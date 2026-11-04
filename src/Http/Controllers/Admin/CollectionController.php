@@ -3,6 +3,7 @@
 namespace PiShift\Content\Http\Controllers\Admin;
 
 use DateTimeInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -35,12 +36,14 @@ class CollectionController
         $driver = $type->driver();
 
         $records = $driver->paginate($type, $search, array_map('strval', $filters));
+        $rows = $records->getCollection()->map(fn (object $record): array => $driver->data($type, $record))->all();
+        $labels = $this->remoteLabels($type, $rows, array_keys($type->columns()));
 
         return Inertia::render('Collections/Index', [
             'collection' => $type->toSchema(),
             'records' => $records->through(fn (object $record): array => [
                 'id' => $driver->id($record),
-                'cells' => $this->cells($type, $driver->data($type, $record)),
+                'cells' => $this->cells($type, $driver->data($type, $record), $labels),
                 'editUrl' => route('content.admin.collections.edit', [$type->key(), $driver->id($record)]),
             ]),
             'query' => ['search' => $search, 'filters' => (object) $filters],
@@ -130,8 +133,18 @@ class CollectionController
             }
         }
 
+        $schema = $type->toSchema();
+        $labels = $this->remoteLabels($type, [$data]);
+
+        foreach ($schema['fields'] as $index => $field) {
+            if ($field['remote'] ?? false) {
+                $schema['fields'][$index]['options'] = $labels[$field['name']] ?? [];
+                $schema['fields'][$index]['optionsUrl'] = route('content.admin.collections.options', [$type->key(), $field['name']]);
+            }
+        }
+
         return Inertia::render('Collections/Form', [
-            'collection' => $type->toSchema(),
+            'collection' => $schema,
             'record' => ['id' => $id, 'data' => (object) $data],
             'actions' => $record === null ? [] : collect($type->actions())
                 ->filter(fn ($action): bool => $action->isVisibleFor($record))
@@ -216,7 +229,41 @@ class CollectionController
      * @param  array<string, mixed>  $data
      * @return array<string, array{type: string, value: mixed, tone?: string}>
      */
-    protected function cells(CollectionType $type, array $data): array
+    /**
+     * Options of a select, searched and one page at a time (for remote selects such as students).
+     */
+    public function options(Request $request, string $collection, string $field): JsonResponse
+    {
+        $type = $this->collection($request, $collection);
+        $select = collect($type->fieldSet()->fields())->first(fn (Field $item): bool => $item instanceof Select && $item->getName() === $field) ?? abort(404);
+
+        return response()->json($select->search((string) $request->query('search', ''), (int) $request->query('page', 1)));
+    }
+
+    /**
+     * Labels of the remote select values found in the given rows, one query per field.
+     *
+     * @param  list<array<string, mixed>>  $rows
+     * @param  list<string>|null  $only  field names to look at
+     * @return array<string, array<string, string>> field => value => label
+     */
+    protected function remoteLabels(CollectionType $type, array $rows, ?array $only = null): array
+    {
+        $labels = [];
+
+        foreach ($type->fieldSet()->fields() as $field) {
+            if ($field instanceof Select && $field->isRemote() && ($only === null || in_array($field->getName(), $only, true))) {
+                $labels[$field->getName()] = $field->labelsFor(array_column($rows, $field->getName()));
+            }
+        }
+
+        return $labels;
+    }
+
+    /**
+     * @param  array<string, array<string, string>>  $labels  remote select labels, see remoteLabels()
+     */
+    protected function cells(CollectionType $type, array $data, array $labels = []): array
     {
         $fields = collect($type->fieldSet()->fields())->keyBy(fn (Field $field): string => $field->getName());
         $badges = $type->badges();
@@ -231,6 +278,7 @@ class CollectionController
                 $field === null => ['type' => 'text', 'value' => is_scalar($value) ? (string) $value : null],
                 $field instanceof Upload => ['type' => 'file', 'value' => $value],
                 $field instanceof File => ['type' => $field->type(), 'value' => $field->resolve($value, $localizer)['url'] ?? null],
+                $field instanceof Select && $field->isRemote() => ['type' => 'text', 'value' => $labels[$name][(string) $value] ?? $value],
                 $field instanceof Select => ['type' => 'text', 'value' => $field->toSchema()['options'][(string) $value] ?? $value],
                 $field->type() === 'toggle' => ['type' => 'boolean', 'value' => (bool) $value],
                 in_array($field->type(), ['date', 'datetime'], true) => ['type' => 'date', 'value' => $value instanceof DateTimeInterface ? $value->format('c') : (filled($value) ? Carbon::parse($value)->toIso8601String() : null)],

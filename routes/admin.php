@@ -42,6 +42,7 @@ Route::middleware([...config('content.admin.middleware', ['web']), SetAdminLocal
 
             Route::get('collections/{collection}', [CollectionController::class, 'index'])->name('collections.index');
             Route::get('collections/{collection}/create', [CollectionController::class, 'create'])->name('collections.create');
+            Route::get('collections/{collection}/fields/{field}/options', [CollectionController::class, 'options'])->name('collections.options');
             Route::post('collections/{collection}', [CollectionController::class, 'store'])->name('collections.store');
             Route::get('collections/{collection}/{record}', [CollectionController::class, 'edit'])->name('collections.edit');
             Route::put('collections/{collection}/{record}', [CollectionController::class, 'update'])->name('collections.update');

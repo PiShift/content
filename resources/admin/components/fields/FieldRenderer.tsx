@@ -8,6 +8,7 @@ import { RichTextField } from './RichTextField';
 import { RepeaterField } from './RepeaterField';
 import { SlugField } from './SlugField';
 import { ReadonlyField } from './ReadonlyField';
+import { RemoteSelectField } from './RemoteSelectField';
 import { UploadField } from './UploadField';
 
 export interface FieldProps {
@@ -48,6 +49,10 @@ function FieldInput(props: FieldProps) {
 
     if (props.field.slugFrom) {
         return <SlugField {...props} />;
+    }
+
+    if (props.field.remote) {
+        return <RemoteSelectField {...props} />;
     }
 
     switch (props.field.type) {
